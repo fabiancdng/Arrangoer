@@ -18,6 +18,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/fabiancdng/Arrangoer/internal/commands"
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/fabiancdng/Arrangoer/internal/events"
 )
@@ -36,6 +37,7 @@ func main() {
 	session.Identify.Intents = discordgo.IntentsAll
 
 	registerEvents(session)
+	registerCommands(session, config)
 
 	err = session.Open()
 	if err != nil {
@@ -55,4 +57,13 @@ func main() {
 func registerEvents(session *discordgo.Session) {
 	session.AddHandler(events.NewReadyHandler().Handler)
 	session.AddHandler(events.NewJoinHanlder().Handler)
+}
+
+func registerCommands(session *discordgo.Session, config *config.Config) {
+	commandHandler := commands.NewCommandHandler(config.Prefix)
+
+	commandHandler.RegisterCommand(&commands.CommandTest{})
+	commandHandler.RegisterMiddleware(&commands.MiddlewarePermissions{})
+
+	session.AddHandler(commandHandler.HandleMessage)
 }
