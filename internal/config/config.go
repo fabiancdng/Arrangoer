@@ -6,8 +6,10 @@ import (
 )
 
 type Config struct {
-	Token  string `json:"token"`
-	Prefix string `json:"prefix"`
+	Token          string `json:"token"`
+	Prefix         string `json:"prefix"`
+	LobbyChannel   string `json:"lobbychannel"`
+	WelcomeMessage string `json:"welcomemessage"`
 }
 
 func ParseConfig(fileName string) (*Config, error) {

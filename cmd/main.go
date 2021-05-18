@@ -19,12 +19,11 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/fabiancdng/Arrangoer/internal/config"
+	"github.com/fabiancdng/Arrangoer/internal/events"
 )
 
 func main() {
-	const configFileName = "./config/config.json"
-
-	config, err := config.ParseConfig(configFileName)
+	config, err := config.ParseConfig("./config/config.json")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -33,6 +32,10 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	session.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
+
+	registerEvents(session)
 
 	err = session.Open()
 	if err != nil {
@@ -47,4 +50,9 @@ func main() {
 	<-sessionChannel
 
 	session.Close()
+}
+
+func registerEvents(session *discordgo.Session) {
+	session.AddHandler(events.NewReadyHandler().Handler)
+	session.AddHandler(events.NewJoinHanlder().Handler)
 }
