@@ -63,6 +63,7 @@ func registerCommands(session *discordgo.Session, config *config.Config) {
 	commandHandler := commands.NewCommandHandler(config.Prefix)
 
 	commandHandler.RegisterCommand(&commands.CommandTest{})
+	commandHandler.RegisterCommand(&commands.CommandSignup{})
 	commandHandler.RegisterMiddleware(&commands.MiddlewarePermissions{})
 
 	session.AddHandler(commandHandler.HandleMessage)

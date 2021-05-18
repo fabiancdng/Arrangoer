@@ -3,7 +3,7 @@ package commands
 type CommandTest struct{}
 
 func (commandTest *CommandTest) Invokes() []string {
-	return []string{"test", "t"}
+	return []string{"test"}
 }
 
 func (commandTest *CommandTest) AdminPermissionsNeeded() bool {
