@@ -2,6 +2,7 @@ package events
 
 import (
 	"log"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/fabiancdng/Arrangoer/internal/config"
@@ -26,11 +27,17 @@ func (joinHandler *JoinHandler) Handler(session *discordgo.Session, event *disco
 		log.Println("Der Lobby-Channel aus der config.json kann nicht gefunden werden! Prüfe, ob der Bot ausreichende Berechtigungen hat und die Channel ID korrekt ist.")
 		return
 	}
+	welcomeMessageParsed := strings.ReplaceAll(config.WelcomeMessage, "//USER//", event.User.Mention())
 
-	_, err = session.ChannelMessageSend(channel.ID, config.WelcomeMessage)
+	embed := &discordgo.MessageEmbed{
+		Title:       "Willkommen!",
+		Description: welcomeMessageParsed,
+		Color:       16757504,
+	}
+
+	_, err = session.ChannelMessageSendEmbed(channel.ID, embed)
 	if err != nil {
 		log.Println("Die Willkommens-Nachricht konnte nicht gesendet werden! Prüfe, ob der Bot ausreichende Berechtigungen hat und die Channel ID korrekt ist.")
 		return
 	}
-
 }

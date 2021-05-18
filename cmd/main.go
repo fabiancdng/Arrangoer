@@ -33,7 +33,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	session.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
+	session.Identify.Intents = discordgo.IntentsAll
 
 	registerEvents(session)
 
