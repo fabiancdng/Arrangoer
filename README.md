@@ -13,7 +13,7 @@
 #### Begrüßung neuer Nutzer
 Der Bot schickt automatisch eine Begrüßungsnachricht für neu gejointe Nutzer in den 'lobbychannel', welchen man in der config.json festlegen kann.
 
-![welcome-message.png](assets/screenshots/welcome-message.png)
+<img width="400px" src="assets/screenshots/welcome-message.png" />
 
 Weitere Dokumentation folgt.
 
