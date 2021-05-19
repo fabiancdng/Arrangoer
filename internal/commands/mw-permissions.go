@@ -15,7 +15,7 @@ func (middlewarePermissions *MiddlewarePermissions) Execute(ctx *Context, comman
 		return
 	}
 
-	// Prüfen, ob der Nachrichtautor Owner ist
+	// Prüfen, ob der Nachricht-Autor Owner ist
 	if guild.OwnerID == ctx.Message.Author.ID {
 		next = true
 		return

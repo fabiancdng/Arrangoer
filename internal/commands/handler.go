@@ -58,6 +58,7 @@ func (commandHandler *CommandHandler) HandleMessage(session *discordgo.Session, 
 		Message: event.Message,
 	}
 
+	// Alle Middlewares vor der Command-Ausführung ausführen
 	for _, mw := range commandHandler.middlewares {
 		next, err := mw.Execute(ctx, command)
 		if err != nil {
@@ -69,6 +70,7 @@ func (commandHandler *CommandHandler) HandleMessage(session *discordgo.Session, 
 		}
 	}
 
+	// Den Command ausführen
 	err := command.Execute(ctx)
 	if err != nil {
 		return
