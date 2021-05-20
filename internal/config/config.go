@@ -7,6 +7,8 @@ import (
 
 type Config struct {
 	Token          string `json:"token"`
+	ClientID       string `json:"client_id"`
+	ClientSecret   string `json:"client_secret"`
 	Prefix         string `json:"prefix"`
 	LobbyChannel   string `json:"lobbychannel"`
 	WelcomeMessage string `json:"welcomemessage"`

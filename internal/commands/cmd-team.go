@@ -9,7 +9,7 @@ func (commandTeam *CommandTeam) Invokes() []string {
 }
 
 func (commandTeam *CommandTeam) AdminPermissionsNeeded() bool {
-	return true
+	return false
 }
 
 func (commandTeam *CommandTeam) Execute(ctx *Context) (err error) {

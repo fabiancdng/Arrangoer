@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -75,5 +76,8 @@ func (commandHandler *CommandHandler) HandleMessage(session *discordgo.Session, 
 	if err != nil {
 		return
 	}
+
+	log.Printf("%s hat den Befehl '%s' ausgeführt.", ctx.Message.Author.Username, invoke)
+	return
 
 }

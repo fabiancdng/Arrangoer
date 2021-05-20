@@ -11,6 +11,5 @@ func (commandClear *CommandClear) AdminPermissionsNeeded() bool {
 }
 
 func (CommandClear *CommandClear) Execute(ctx *Context) (err error) {
-	err = ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
 	return
 }

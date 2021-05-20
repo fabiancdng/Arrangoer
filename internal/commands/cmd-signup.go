@@ -9,7 +9,7 @@ func (commandSignup *CommandSignup) Invokes() []string {
 }
 
 func (commandSignup *CommandSignup) AdminPermissionsNeeded() bool {
-	return true
+	return false
 }
 
 func (commandSignup *CommandSignup) Execute(ctx *Context) (err error) {
