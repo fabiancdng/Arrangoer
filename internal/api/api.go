@@ -47,13 +47,6 @@ func Run(apiChannel chan string) {
 
 	app := fiber.New()
 
-	app.Get("/api/test", func(ctx *fiber.Ctx) error {
-		apiChannel <- "test"
-		return ctx.JSON(fiber.Map{
-			"message": "Test 👋",
-		})
-	})
-
 	app.Get("/api/auth", func(ctx *fiber.Ctx) error {
 		// Leite an die Oauth2 Authorization Seite weiter
 		return ctx.Redirect(discordAuth.AuthCodeURL(state), 307)

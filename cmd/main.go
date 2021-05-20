@@ -16,10 +16,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/fabiancdng/Arrangoer/internal/api"
 	"github.com/fabiancdng/Arrangoer/internal/commands"
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/fabiancdng/Arrangoer/internal/events"
@@ -46,15 +44,15 @@ func main() {
 		log.Panic(err)
 	}
 
-	apiChannel := make(chan string)
-	go api.Run(apiChannel)
-	go func() {
-		for {
-			apiCommand := <-apiChannel
-			log.Println(apiCommand)
-			time.Sleep(1 * time.Second)
-		}
-	}()
+	// apiChannel := make(chan string)
+	// go api.Run(apiChannel)
+	// go func() {
+	// 	for {
+	// 		apiCommand := <-apiChannel
+	// 		log.Println(apiCommand)
+	// 		time.Sleep(1 * time.Second)
+	// 	}
+	// }()
 
 	log.Println("Der Bot läuft jetzt! // Er kann mit STRG+C beendet werden.")
 
