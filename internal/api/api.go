@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 
@@ -11,6 +12,13 @@ import (
 	"github.com/ravener/discord-oauth2"
 	"golang.org/x/oauth2"
 )
+
+type DiscordUser struct {
+	ID            string `json:"id"`
+	Username      string `json:"username"`
+	Avatar        string `json:"avatar"`
+	Discriminator string `json:"discriminator"`
+}
 
 type CallbackRequest struct {
 	Sate string `query:"state"`
@@ -27,7 +35,7 @@ func Run(apiChannel chan string) {
 	}
 
 	// Zufälliger String, der von Login geschickt und im Callback validiert wird
-	var state string = "random"
+	var state string = "v6uhSq6eWsnyAp"
 
 	discordAuth := &oauth2.Config{
 		RedirectURL:  "http://localhost:5000/api/auth/callback",
@@ -93,7 +101,10 @@ func Run(apiChannel chan string) {
 			return fiber.NewError(500, "an error occured while attempting to parse request body")
 		}
 
-		return ctx.Send(body)
+		var discordUser DiscordUser
+		json.Unmarshal(body, &discordUser)
+
+		return ctx.JSON(discordUser)
 	})
 
 	app.Get("/api/auth/callback", func(ctx *fiber.Ctx) error {
