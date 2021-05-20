@@ -26,9 +26,6 @@ type CallbackRequest struct {
 }
 
 func Run(apiChannel chan string) {
-
-	store := session.New()
-
 	config, err := config.ParseConfig("./config/config.json")
 	if err != nil {
 		log.Panic(err)
@@ -46,6 +43,7 @@ func Run(apiChannel chan string) {
 	}
 
 	app := fiber.New()
+	store := session.New()
 
 	app.Get("/api/auth", func(ctx *fiber.Ctx) error {
 		// Leite an die Oauth2 Authorization Seite weiter

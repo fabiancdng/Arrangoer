@@ -18,6 +18,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/fabiancdng/Arrangoer/internal/api"
 	"github.com/fabiancdng/Arrangoer/internal/commands"
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/fabiancdng/Arrangoer/internal/events"
@@ -44,8 +45,8 @@ func main() {
 		log.Panic(err)
 	}
 
-	// apiChannel := make(chan string)
-	// go api.Run(apiChannel)
+	apiChannel := make(chan string)
+	go api.Run(apiChannel)
 	// go func() {
 	// 	for {
 	// 		apiCommand := <-apiChannel
@@ -77,6 +78,7 @@ func registerCommands(session *discordgo.Session, config *config.Config) {
 	commandHandler.RegisterCommand(&commands.CommandTest{})
 	commandHandler.RegisterCommand(&commands.CommandSignup{})
 	commandHandler.RegisterCommand(&commands.CommandTeam{})
+	commandHandler.RegisterCommand(&commands.CommandClear{})
 	commandHandler.RegisterMiddleware(&commands.MiddlewarePermissions{})
 
 	session.AddHandler(commandHandler.HandleMessage)
