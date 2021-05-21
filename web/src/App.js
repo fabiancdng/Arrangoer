@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
-import { ChakraProvider } from '@chakra-ui/react'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Header from './components/Header'
+import { UserContext } from './context/UserContext'
 
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState({});
+
+  const userContext = useContext(UserContext)
 
   useEffect(() => {
     fetch("/api/auth/get/user")
@@ -15,35 +15,29 @@ const App = () => {
             if(res.ok) {
                 res = await res.json();
                 console.log(res);
-                setLoggedIn(true);
-                setUser(res);
+                userContext.setLoggedIn(true);
+                userContext.setUser(res);
                 return
             }
         });
-  }, [])
+  }, [userContext])
 
   return (
     <BrowserRouter>
-      {/* Chakra Provider für globale Design-States */}
-      <ChakraProvider>
+      <Header />
+      <Switch>
+        <Route exact path="/">
+          {userContext.loggedIn ? <Redirect to="/dashboard" /> : <Login />}
+        </Route>
 
-        <Header />
+        <Route path="/dashboard">
+          {userContext.loggedIn ? <Dashboard /> : <Redirect to="/" />}
+        </Route>
 
-        <Switch>
-          <Route exact path="/">
-            {loggedIn ? <Redirect to="/dashboard" /> : <Login />}
-          </Route>
-
-          <Route path="/dashboard">
-            {loggedIn ? <Dashboard user={user} /> : <Redirect to="/" />}
-          </Route>
-
-          <Route path="/login">
-            {loggedIn ? <Redirect to="/dashboard" /> : <Login />}
-          </Route>
-        </Switch>
-
-      </ChakraProvider>
+        <Route path="/login">
+          {userContext.loggedIn ? <Redirect to="/dashboard" /> : <Login />}
+        </Route>
+      </Switch>
     </BrowserRouter>
   );
 }

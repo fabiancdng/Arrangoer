@@ -1,4 +1,9 @@
-const Dashboard = ({ user }) => {
+import { useContext, useEffect } from "react";
+import { UserContext } from "../context/UserContext";
+
+const Dashboard = () => {
+    const userContext = useContext(UserContext)
+
     useEffect(() => {
         fetch("/api/auth/get/guild")
             .then(async (res) => {
@@ -11,7 +16,7 @@ const Dashboard = ({ user }) => {
     }, [])
 
     return (
-        <p>Welcome, {JSON.stringify(user)}</p>
+        <p>Welcome, {JSON.stringify(userContext.user)}</p>
     )
 }
 
