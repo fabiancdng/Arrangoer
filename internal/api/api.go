@@ -128,7 +128,7 @@ func Run(apiChannel chan string) {
 		sess.Set("dc_access_token", token.AccessToken)
 		sess.Set("dc_refresh_token", token.AccessToken)
 
-		return ctx.SendString("login successful")
+		return ctx.Redirect("http://localhost:3000")
 	})
 
 	log.Println("API ist bereit!")
