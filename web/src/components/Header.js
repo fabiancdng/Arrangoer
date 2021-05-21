@@ -9,18 +9,18 @@ const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
 
     return (
-        <Flex alignItems="center" p={8} width="full">
+        <Flex justifyContent="space-between" p={6} width="full">
             <Flex alignItems="center">
-                <Image mb={1} rounded={10}  boxSize="50px" src={`/assets/favicon-32x32.png`} />
+                <Image mb={1} mr={2} rounded={10} boxSize="50px" src={`/assets/favicon-32x32.png`} />
                 <Heading fontSize="2xl">Arrangør</Heading>
             </Flex>
-            <Flex alignItems="center" textAlign="right">
-                <Image justifyContent="flex-end" rounded={10} boxSize="40px" src={`https://cdn.discordapp.com/avatars/${userContext.user.id}/${userContext.user.avatar}.png`} />
-                <Heading fontSize="1xl">{userContext.user.username}</Heading>
+            <Flex alignItems="center">
+                {userContext.user.loggedIn ? <Image mr={5} justifyContent="flex-end" rounded={10} boxSize="40px" src={`https://cdn.discordapp.com/avatars/${userContext.user.id}/${userContext.user.avatar}.png`} /> : ''}
+                {userContext.user.loggedIn ? <Heading fontSize="1xl">{userContext.user.username}t</Heading> : ''}
                 <IconButton
-                icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                onClick={toggleColorMode}
-                variant="ghost"
+                    icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                    onClick={toggleColorMode}
+                    variant="ghost"
                 />
             </Flex>
         </Flex>

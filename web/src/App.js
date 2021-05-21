@@ -7,35 +7,36 @@ import { UserContext } from './context/UserContext'
 
 const App = () => {
 
-  const userContext = useContext(UserContext)
-
+  const { loggedIn, user, setLoggedIn, setUser } = useContext(UserContext)
+    
   useEffect(() => {
     fetch("/api/auth/get/user")
-        .then(async (res) => {
-            if(res.ok) {
-                res = await res.json();
-                console.log(res);
-                userContext.setLoggedIn(true);
-                userContext.setUser(res);
-                return
-            }
-        });
-  }, [userContext])
+      .then(res => {
+        if(res.ok) {
+          res = res.json()
+          .then(res => {
+              console.log(res);
+              setLoggedIn(true);
+              setUser(res);
+          });
+        }
+      })
+    }, [setLoggedIn, setUser])
 
   return (
     <BrowserRouter>
       <Header />
       <Switch>
         <Route exact path="/">
-          {userContext.loggedIn ? <Redirect to="/dashboard" /> : <Login />}
+          {loggedIn ? <Redirect to="/dashboard" /> : <Redirect to="/login" /> }
         </Route>
 
         <Route path="/dashboard">
-          {userContext.loggedIn ? <Dashboard /> : <Redirect to="/" />}
+          {loggedIn ? <Dashboard /> : <Redirect to="/" />}
         </Route>
 
         <Route path="/login">
-          {userContext.loggedIn ? <Redirect to="/dashboard" /> : <Login />}
+          {loggedIn ? <Redirect to="/dashboard" /> : <Login />}
         </Route>
       </Switch>
     </BrowserRouter>
