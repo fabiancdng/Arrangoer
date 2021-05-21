@@ -9,6 +9,7 @@ type Config struct {
 	Token          string `json:"token"`
 	ClientID       string `json:"client_id"`
 	ClientSecret   string `json:"client_secret"`
+	ServerID       string `json:"server_id"`
 	Prefix         string `json:"prefix"`
 	LobbyChannel   string `json:"lobbychannel"`
 	WelcomeMessage string `json:"welcomemessage"`

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"strconv"
 
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,13 @@ type DiscordUser struct {
 	Username      string `json:"username"`
 	Avatar        string `json:"avatar"`
 	Discriminator string `json:"discriminator"`
+}
+
+type DiscordGuild struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Icon        string `json:"icon"`
+	Permissions string `json:"permissions_new"`
 }
 
 type CallbackRequest struct {
@@ -38,7 +46,7 @@ func Run(apiChannel chan string) {
 		RedirectURL:  "http://localhost:5000/api/auth/callback",
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
-		Scopes:       []string{discord.ScopeIdentify},
+		Scopes:       []string{discord.ScopeIdentify, discord.ScopeGuilds},
 		Endpoint:     discord.Endpoint,
 	}
 
@@ -50,7 +58,7 @@ func Run(apiChannel chan string) {
 		return ctx.Redirect(discordAuth.AuthCodeURL(state), 307)
 	})
 
-	app.Get("/api/auth/get", func(ctx *fiber.Ctx) error {
+	app.Get("/api/auth/get/:endpoint", func(ctx *fiber.Ctx) error {
 		sess, err := store.Get(ctx)
 		if err != nil || sess == nil {
 			return fiber.NewError(500, "error processing session")
@@ -77,8 +85,17 @@ func Run(apiChannel chan string) {
 			RefreshToken: refreshToken,
 		}
 
+		var endpoint string
+
+		switch ctx.Params("endpoint") {
+		case "guilds":
+			endpoint = "https://discordapp.com/api/users/@me/guilds"
+		default:
+			endpoint = "https://discordapp.com/api/users/@me"
+		}
+
 		// Den Access-Token benutzen, um Daten des Benutzers abzurufen
-		res, err := discordAuth.Client(context.Background(), token).Get("https://discordapp.com/api/users/@me")
+		res, err := discordAuth.Client(context.Background(), token).Get(endpoint)
 
 		if err != nil || res.StatusCode != 200 {
 			return fiber.NewError(500, "couldn't use the access token")
@@ -92,10 +109,43 @@ func Run(apiChannel chan string) {
 			return fiber.NewError(500, "an error occured while attempting to parse request body")
 		}
 
-		var discordUser DiscordUser
-		json.Unmarshal(body, &discordUser)
+		switch ctx.Params("endpoint") {
+		case "guild":
+			var discordGuilds []*DiscordGuild
+			json.Unmarshal(body, &discordGuilds)
 
-		return ctx.JSON(discordUser)
+			var isUserMemberOfGuild bool = false
+			var isUserAdminOfGuild bool = false
+
+			for _, guild := range discordGuilds {
+				// Prüfen, ob der Nutzer bereits auf dem Server ist
+				if guild.ID == config.ServerID {
+					isUserMemberOfGuild = true
+					// Prüfen, ob der Nutzer Admin-Rechte auf dem Server hat
+					permissions, err := strconv.Atoi(guild.Permissions)
+					if err != nil {
+						break
+					}
+
+					if permissions&8 > 0 {
+						isUserAdminOfGuild = true
+					}
+
+					break
+				}
+			}
+
+			return ctx.JSON(fiber.Map{
+				"user_is_member": strconv.FormatBool(isUserMemberOfGuild),
+				"user_is_admin":  strconv.FormatBool(isUserAdminOfGuild),
+			})
+		default:
+			var discordUser DiscordUser
+			json.Unmarshal(body, &discordUser)
+
+			return ctx.JSON(discordUser)
+		}
+
 	})
 
 	app.Get("/api/auth/callback", func(ctx *fiber.Ctx) error {

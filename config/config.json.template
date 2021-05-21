@@ -3,6 +3,7 @@
     "client_id": "",
     "client_secret": "",
     "prefix": ".",
+    "server_id": "745684638562779147",
     "lobbychannel": "",
     "welcomemessage": "**Hey, //USER// 👋**\n **Willkommen auf dem Discord des Programmier-Wettbewerbs.**\n Schön, dass du da bist!"
 }

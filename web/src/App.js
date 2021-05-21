@@ -10,7 +10,7 @@ const App = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    fetch("/api/auth/get")
+    fetch("/api/auth/get/user")
         .then(async (res) => {
             if(res.ok) {
                 res = await res.json();
