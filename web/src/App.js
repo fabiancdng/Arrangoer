@@ -7,18 +7,16 @@ import { UserContext } from './context/UserContext'
 
 const App = () => {
 
-  const { loggedIn, user, setLoggedIn, setUser } = useContext(UserContext)
+  const { loggedIn, setLoggedIn, setUser } = useContext(UserContext)
     
   useEffect(() => {
     fetch("/api/auth/get/user")
-      .then(res => {
+      .then(async res => {
         if(res.ok) {
-          res = res.json()
-          .then(res => {
-              console.log(res);
-              setLoggedIn(true);
-              setUser(res);
-          });
+          res = await res.json()
+          console.log(res);
+          setLoggedIn(true);
+          setUser(res);
         }
       })
     }, [setLoggedIn, setUser])
