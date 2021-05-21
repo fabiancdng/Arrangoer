@@ -88,7 +88,7 @@ func Run(apiChannel chan string) {
 		var endpoint string
 
 		switch ctx.Params("endpoint") {
-		case "guilds":
+		case "guild":
 			endpoint = "https://discordapp.com/api/users/@me/guilds"
 		default:
 			endpoint = "https://discordapp.com/api/users/@me"
@@ -122,11 +122,7 @@ func Run(apiChannel chan string) {
 				if guild.ID == config.ServerID {
 					isUserMemberOfGuild = true
 					// Prüfen, ob der Nutzer Admin-Rechte auf dem Server hat
-					permissions, err := strconv.Atoi(guild.Permissions)
-					if err != nil {
-						break
-					}
-
+					permissions, _ := strconv.Atoi(guild.Permissions)
 					if permissions&8 > 0 {
 						isUserAdminOfGuild = true
 					}
@@ -139,6 +135,7 @@ func Run(apiChannel chan string) {
 				"user_is_member": strconv.FormatBool(isUserMemberOfGuild),
 				"user_is_admin":  strconv.FormatBool(isUserAdminOfGuild),
 			})
+
 		default:
 			var discordUser DiscordUser
 			json.Unmarshal(body, &discordUser)
