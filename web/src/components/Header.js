@@ -1,22 +1,30 @@
-import { MoonIcon, SunIcon } from "@chakra-ui/icons"
+import { LockIcon, MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Heading, Flex } from "@chakra-ui/layout"
 import { IconButton, Image, useColorMode } from '@chakra-ui/react'
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 
 const Header = () => {
-    const userContext = useContext(UserContext)
+    const { user, loggedIn } = useContext(UserContext)
     const { colorMode, toggleColorMode } = useColorMode();
 
     return (
-        <Flex justifyContent="space-between" p={6} width="full">
+        <Flex position="fixed" top={0} left={0} justifyContent="space-between" p={6} width="full">
             <Flex alignItems="center">
                 <Image mr={2} rounded={10} boxSize="50px" src={`/assets/favicon-32x32.png`} />
                 <Heading fontSize="2xl">Arrangør</Heading>
             </Flex>
             <Flex alignItems="center">
-                {userContext.user.loggedIn ? <Image mr={5} justifyContent="flex-end" rounded={10} boxSize="40px" src={`https://cdn.discordapp.com/avatars/${userContext.user.id}/${userContext.user.avatar}.png`} /> : ''}
-                {userContext.user.loggedIn ? <Heading fontSize="1xl">{userContext.user.username}t</Heading> : ''}
+                {loggedIn && (
+                    <Image mr={3} justifyContent="flex-end" rounded={10} boxSize="40px" src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} />)}
+                {loggedIn && <Heading mr={3} fontSize="1xl">{user.username}</Heading>}
+                {loggedIn && <IconButton
+                    icon={<LockIcon />}
+                    mr={3}
+                    ml={3}
+                    onClick={e => {window.location.href = "https://localhost:5000/api/auth/logout"}}
+                    variant="ghost"
+                />}
                 <IconButton
                     icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                     onClick={toggleColorMode}
