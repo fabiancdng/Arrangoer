@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import Login from './pages/Login'
-import AdminDashboard from './components/AdminDashboard'
-import MemberDashboard from './components/MemberDashboard'
+import AdminDashboard from './pages/AdminDashboard'
+import MemberDashboard from './pages/MemberDashboard'
 import Header from './components/Header'
 import { UserContext } from './context/UserContext'
 

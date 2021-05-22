@@ -4,9 +4,11 @@ import { Image } from "@chakra-ui/image"
 import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/layout"
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
+import { useColorMode } from '@chakra-ui/react'
 
 const UserDashboard = () => {
     const { user, guild } = useContext(UserContext)
+    const { colorMode } = useColorMode();
 
     return (
         <Flex mt={40} flexDirection="column" align="center" justifyContent="center">
@@ -19,12 +21,12 @@ const UserDashboard = () => {
                 <Divider mt={3} mb={3} />
                 {guild.user_is_member &&
                     (<Box my={4}>
-                        <Button width="100%" color="#fff" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
+                        <Button width="100%" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
                             <EditIcon mr={3} />
                             Für den Wettbewerb anmelden
                         </Button>
                         <Divider mt={3} mb={3} />
-                        <Button width="100%" color="#fff" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
+                        <Button width="100%" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
                             <DragHandleIcon mr={3} />
                             Team wählen
                         </Button>
@@ -32,8 +34,8 @@ const UserDashboard = () => {
                 }
                 {!guild.user_is_member &&
                     (<Box my={4}>
-                        <Button width="100%" color="#fff" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
-                            <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-White.png" />
+                        <Button width="100%" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
+                            {colorMode === 'light' ? <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-Black.png" /> : <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-White.png" />}
                             Dem Discord-Server beitreten
                         </Button>
                     </Box>)
