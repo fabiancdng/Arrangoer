@@ -5,6 +5,8 @@ import AdminDashboard from './pages/AdminDashboard'
 import MemberDashboard from './pages/MemberDashboard'
 import Header from './components/Header'
 import { UserContext } from './context/UserContext'
+import Signup from './pages/Signup'
+import SelectTeam from './pages/SelectTeam'
 
 const App = () => {
 
@@ -75,6 +77,22 @@ const App = () => {
             loggedIn 
             ? <Redirect to="/dashboard" />
             : <Login />
+          }
+        </Route>
+
+        <Route path="/signup">
+        {
+            loggedIn
+              ? <Signup />
+              : <Redirect to="/login" />
+          }
+        </Route>
+
+        <Route path="/select">
+        {
+            loggedIn
+              ? <SelectTeam />
+              : <Redirect to="/login" />
           }
         </Route>
       </Switch>

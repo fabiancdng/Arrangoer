@@ -5,8 +5,20 @@ import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 
 const Header = () => {
-    const { user, loggedIn } = useContext(UserContext)
+    const { user, loggedIn, setUser, setLoggedIn, setGuild } = useContext(UserContext)
     const { colorMode, toggleColorMode } = useColorMode();
+
+    const logout = () => {
+        fetch("/api/auth/logout")
+            .then(res => {
+                if(res.ok) {
+                    setUser("pending")
+                    setGuild("pending")
+                    setLoggedIn(false)
+                    window.location.href = "/"
+                }
+            })
+    }
 
     return (
         <Flex position="fixed" top={0} left={0} justifyContent="space-between" p={6} width="full">
@@ -22,8 +34,7 @@ const Header = () => {
                     icon={<LockIcon />}
                     mr={3}
                     ml={3}
-                    as="a"
-                    href="http://localhost:5000/api/auth/logout"
+                    onClick={e => logout()}
                     variant="ghost"
                 />}
                 <IconButton

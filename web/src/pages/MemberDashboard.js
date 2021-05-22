@@ -5,6 +5,7 @@ import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/layout"
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 import { useColorMode } from '@chakra-ui/react'
+import { Link as ReactRouterLink } from 'react-router-dom'
 
 const UserDashboard = () => {
     const { user, guild } = useContext(UserContext)
@@ -21,12 +22,12 @@ const UserDashboard = () => {
                 <Divider mt={3} mb={3} />
                 {guild.user_is_member &&
                     (<Box my={4}>
-                        <Button width="100%" size="md">
+                        <Button as={ReactRouterLink} to="/signup" width="100%" size="md">
                             <EditIcon mr={3} />
                             Für den Wettbewerb anmelden
                         </Button>
                         <Divider mt={3} mb={3} />
-                        <Button width="100%" size="md">
+                        <Button as={ReactRouterLink} to="/select" width="100%" size="md">
                             <DragHandleIcon mr={3} />
                             Team wählen
                         </Button>

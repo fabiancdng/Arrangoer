@@ -179,6 +179,19 @@ func Run(apiChannel chan string) {
 		return ctx.Redirect("http://localhost:3000")
 	})
 
+	app.Get("/api/auth/logout", func(ctx *fiber.Ctx) error {
+		sess, err := store.Get(ctx)
+		if err != nil || sess == nil {
+			return fiber.NewError(500, "error processing session")
+		}
+
+		if err := sess.Destroy(); err != nil {
+			return fiber.NewError(500, "error deleting session")
+		}
+
+		return ctx.SendStatus(200)
+	})
+
 	log.Println("API ist bereit!")
 
 	app.Listen(":5000")
