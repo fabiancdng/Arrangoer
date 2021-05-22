@@ -16,8 +16,8 @@ const Header = () => {
             </Flex>
             <Flex alignItems="center">
                 {loggedIn && (
-                    <Image mr={3} justifyContent="flex-end" rounded={10} boxSize="40px" src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} />)}
-                {loggedIn && <Heading mr={3} fontSize="1xl">{user.username}</Heading>}
+                    <Image mr={3} display={{base: "none", sm: "inherit"}} justifyContent="flex-end" rounded={10} boxSize="35px" src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} />)}
+                {loggedIn && <Heading mr={3} display={{base: "none", sm: "inherit"}} fontSize="1xl">{user.username}</Heading>}
                 {loggedIn && <IconButton
                     icon={<LockIcon />}
                     mr={3}
