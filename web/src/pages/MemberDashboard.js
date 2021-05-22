@@ -12,7 +12,7 @@ const UserDashboard = () => {
     const { colorMode } = useColorMode();
 
     return (
-        <Flex mt={40} flexDirection="column" align="center" justifyContent="center">
+        <Flex mt={10} flexDirection="column" align="center" justifyContent="center">
             <Flex p={8} maxW={{ base: "90%", md: "600px" }} borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center" >
                 <Box textAlign="center" width="80%">
                     <Heading>Hallo, {user.username}!</Heading>
@@ -22,12 +22,12 @@ const UserDashboard = () => {
                 <Divider mt={3} mb={3} />
                 {guild.user_is_member &&
                     (<Box my={4}>
-                        <Button as={ReactRouterLink} width="100%" size="md">
+                        <Button as={ReactRouterLink} to="/signup" width="100%" size="md">
                             <EditIcon mr={3} />
                             Für den Wettbewerb anmelden
                         </Button>
                         <Divider mt={3} mb={3} />
-                        <Button width="100%" size="md">
+                        <Button as={ReactRouterLink} to="/select" width="100%" size="md">
                             <DragHandleIcon mr={3} />
                             Team auswählen/ändern
                         </Button>

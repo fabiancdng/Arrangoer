@@ -33,6 +33,37 @@ type CallbackRequest struct {
 	Code string `query:"code"`
 }
 
+type Application struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Team  string `json:"team"`
+}
+
+func authorize(ctx *fiber.Ctx, store *session.Store) (string, string, error) {
+	sess, err := store.Get(ctx)
+	if err != nil || sess == nil {
+		return "", "", fiber.NewError(500, "error processing session")
+	}
+
+	defer sess.Save()
+
+	sessionAccessToken := sess.Get("dc_access_token")
+	if sessionAccessToken == nil {
+		return "", "", fiber.NewError(401)
+	}
+
+	accessToken := sessionAccessToken.(string)
+
+	sessionRefreshToken := sess.Get("dc_refresh_token")
+	if sessionAccessToken == nil {
+		return accessToken, "", fiber.NewError(401)
+	}
+
+	refreshToken := sessionRefreshToken.(string)
+
+	return accessToken, refreshToken, nil
+}
+
 func Run(apiChannel chan string) {
 	config, err := config.ParseConfig("./config/config.json")
 	if err != nil {
@@ -59,26 +90,10 @@ func Run(apiChannel chan string) {
 	})
 
 	app.Get("/api/auth/get/:endpoint", func(ctx *fiber.Ctx) error {
-		sess, err := store.Get(ctx)
-		if err != nil || sess == nil {
-			return fiber.NewError(500, "error processing session")
-		}
-
-		defer sess.Save()
-
-		sessionAccessToken := sess.Get("dc_access_token")
-		if sessionAccessToken == nil {
+		accessToken, refreshToken, err := authorize(ctx, store)
+		if accessToken == "" || refreshToken == "" || err != nil {
 			return fiber.NewError(401)
 		}
-
-		accessToken := sessionAccessToken.(string)
-
-		sessionRefreshToken := sess.Get("dc_refresh_token")
-		if sessionAccessToken == nil {
-			return fiber.NewError(401)
-		}
-
-		refreshToken := sessionRefreshToken.(string)
 
 		token := &oauth2.Token{
 			AccessToken:  accessToken,
@@ -188,6 +203,24 @@ func Run(apiChannel chan string) {
 		if err := sess.Destroy(); err != nil {
 			return fiber.NewError(500, "error deleting session")
 		}
+
+		return ctx.SendStatus(200)
+	})
+
+	app.Post("/api/application/submit", func(ctx *fiber.Ctx) error {
+		accessToken, refreshToken, err := authorize(ctx, store)
+		if accessToken == "" || refreshToken == "" || err != nil {
+			return fiber.NewError(401)
+		}
+
+		application := new(Application)
+
+		err = ctx.BodyParser(application)
+		if err != nil {
+			return fiber.NewError(400)
+		}
+
+		log.Println(application)
 
 		return ctx.SendStatus(200)
 	})

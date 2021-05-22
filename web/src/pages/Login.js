@@ -4,7 +4,7 @@ import { Box, Flex, Heading, Text } from "@chakra-ui/layout"
 
 const Login = () => {
     return (
-        <Flex mt={40} flexDirection="column" align="center" justifyContent="center">
+        <Flex mt={10} flexDirection="column" align="center" justifyContent="center">
             <Flex p={8} maxW={{ base: "90%", md: "600px" }} borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center" >
                 <Box textAlign="center" width="80%">
                     <Heading>Login</Heading>
