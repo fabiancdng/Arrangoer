@@ -25,8 +25,6 @@ const App = () => {
         .then(async res => {
           if(res.ok) {
             res = await res.json();
-            res.user_is_admin === "true" ? res.user_is_admin = true : res.user_is_admin = false
-            res.user_is_member === "true" ? res.user_is_member = true : res.user_is_member = false
             console.log(res);
             setGuild(res)
           } else if(res.status === 401) {

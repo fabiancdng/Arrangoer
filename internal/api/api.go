@@ -132,8 +132,8 @@ func Run(apiChannel chan string) {
 			}
 
 			return ctx.JSON(fiber.Map{
-				"user_is_member": strconv.FormatBool(isUserMemberOfGuild),
-				"user_is_admin":  strconv.FormatBool(isUserAdminOfGuild),
+				"user_is_member": isUserMemberOfGuild,
+				"user_is_admin":  isUserAdminOfGuild,
 			})
 
 		default:
