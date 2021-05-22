@@ -134,6 +134,7 @@ func Run(apiChannel chan string) {
 			return ctx.JSON(fiber.Map{
 				"user_is_member": isUserMemberOfGuild,
 				"user_is_admin":  isUserAdminOfGuild,
+				"invite_link":    config.InviteLink,
 			})
 
 		default:

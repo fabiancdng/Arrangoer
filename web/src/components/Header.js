@@ -22,7 +22,8 @@ const Header = () => {
                     icon={<LockIcon />}
                     mr={3}
                     ml={3}
-                    onClick={e => {window.location.href = "https://localhost:5000/api/auth/logout"}}
+                    as="a"
+                    href="http://localhost:5000/api/auth/logout"
                     variant="ghost"
                 />}
                 <IconButton

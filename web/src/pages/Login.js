@@ -11,7 +11,7 @@ const Login = () => {
                     <Text p={5}>Um fortzufahren, logge dich bitte mit deinem Discord-Account ein. Wir verbinden deine Anmeldung mit deinem Discord-Account, so dass du dir später selbst dein Team zuweisen kannst.</Text>
                 </Box>
                 <Box my={4} textAlign="center">
-                    <Button _hover={{bg: "#5d70b3"}} color="#fff" bg="#7289da" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="lg">
+                    <Button _hover={{bg: "#5d70b3"}} color="#fff" bg="#7289da" as="a" href="http://localhost:5000/api/auth" size="lg">
                         <Image boxSize="40px" mr={3} alt="" src="/assets/Discord-Logo-White.png" />
                         Mit Discord anmelden
                     </Button>

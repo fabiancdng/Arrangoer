@@ -21,12 +21,12 @@ const UserDashboard = () => {
                 <Divider mt={3} mb={3} />
                 {guild.user_is_member &&
                     (<Box my={4}>
-                        <Button width="100%" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
+                        <Button width="100%" size="md">
                             <EditIcon mr={3} />
                             Für den Wettbewerb anmelden
                         </Button>
                         <Divider mt={3} mb={3} />
-                        <Button width="100%" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
+                        <Button width="100%" size="md">
                             <DragHandleIcon mr={3} />
                             Team wählen
                         </Button>
@@ -34,7 +34,7 @@ const UserDashboard = () => {
                 }
                 {!guild.user_is_member &&
                     (<Box my={4}>
-                        <Button width="100%" onClick={e => {window.location.href= "http://localhost:5000/api/auth"}} size="md">
+                        <Button width="100%" as="a" href={guild.invite_link} target="_blank" size="md">
                             {colorMode === 'light' ? <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-Black.png" /> : <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-White.png" />}
                             Dem Discord-Server beitreten
                         </Button>

@@ -12,6 +12,7 @@ type Config struct {
 	ServerID       string `json:"server_id"`
 	Prefix         string `json:"prefix"`
 	LobbyChannel   string `json:"lobbychannel"`
+	InviteLink     string `json:"invite_link"`
 	WelcomeMessage string `json:"welcomemessage"`
 }
 
