@@ -11,7 +11,7 @@ const Header = () => {
     return (
         <Flex justifyContent="space-between" p={6} width="full">
             <Flex alignItems="center">
-                <Image mb={1} mr={2} rounded={10} boxSize="50px" src={`/assets/favicon-32x32.png`} />
+                <Image mr={2} rounded={10} boxSize="50px" src={`/assets/favicon-32x32.png`} />
                 <Heading fontSize="2xl">Arrangør</Heading>
             </Flex>
             <Flex alignItems="center">

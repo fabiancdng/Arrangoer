@@ -3,9 +3,9 @@ import { createContext, useState } from 'react'
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState({});
-    const [guild, setGuild] = useState({});
+    const [loggedIn, setLoggedIn] = useState("pending");
+    const [user, setUser] = useState("pending");
+    const [guild, setGuild] = useState("pending");
 
     return (
         <UserContext.Provider

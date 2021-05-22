@@ -1,7 +1,7 @@
 const UserDashboard = () => {
     return (
         <div>
-            User-Dashboard            
+            Member-Dashboard            
         </div>
     )
 }
