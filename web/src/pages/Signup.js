@@ -24,7 +24,7 @@ const Signup = () => {
                         <Text mt={5} fontSize="sm">
                             <b>Infos zu Teams: </b>
                             Du kannst deinen Team-Namen frei wählen. Wenn du dich schon mit jemandem abgesprochen hast, könnt ihr den gleichen Team-Namen hier eingeben.
-                            Der Spielleiter muss deinen Team-Namen erst bestätigen und dann kannst du dir dein(e) Team(rolle) über den Bot bzw. die Website zuweisen.
+                            Der Spielleiter muss deinen Team-Namen erst bestätigen und dann wird er dir automatisch zugewiesen.
                             Wenn du ein Einzelteilnehmer bist, kannst du dieses Feld auch leer lassen. Wenn du noch ein Team suchst, kannst du in den Discord schreiben.
                         </Text>
                         <Input _hover={{cursor: "pointer"}} mt={5} type="submit" value="Anmeldung abschicken" />
