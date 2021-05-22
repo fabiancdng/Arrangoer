@@ -22,14 +22,14 @@ const UserDashboard = () => {
                 <Divider mt={3} mb={3} />
                 {guild.user_is_member &&
                     (<Box my={4}>
-                        <Button as={ReactRouterLink} to="/signup" width="100%" size="md">
+                        <Button as={ReactRouterLink} width="100%" size="md">
                             <EditIcon mr={3} />
                             Für den Wettbewerb anmelden
                         </Button>
                         <Divider mt={3} mb={3} />
-                        <Button as={ReactRouterLink} to="/select" width="100%" size="md">
+                        <Button width="100%" size="md">
                             <DragHandleIcon mr={3} />
-                            Team wählen
+                            Team auswählen/ändern
                         </Button>
                     </Box>)
                 }
