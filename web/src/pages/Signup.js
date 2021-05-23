@@ -25,8 +25,10 @@ const Signup = () => {
             .then(res => {
                 if(res.ok) {
                     setSubmitted(3)
-                } else {
+                } else if(res.status === 302) {
                     setSubmitted(4)
+                } else {
+                    setSubmitted(5)
                 }
             })
     }
@@ -56,8 +58,9 @@ const Signup = () => {
                         {
                             submitted === 1 ? <Input _hover={{cursor: "pointer"}} mt={5} type="submit" value="Anmeldung abschicken" />
                              : submitted === 2 ? <Button mt={5} isLoading loadingText="Wird gesendet...">...</Button>
-                             : submitted === 3 ? <p mt={3} style={{color: "green"}}>Deine Anmeldung wurde abgeschickt!</p>
-                             :  <p mt={3} style={{color: "red"}}>Deine Anmeldung konnte nicht abgeschickt werden! Warte einen Moment und versuche es erneut oder kontaktiere uns über Discord!</p>
+                             : submitted === 3 ? <p mt={10} style={{color: "green"}}>Deine Anmeldung wurde abgeschickt!</p>
+                             : submitted === 4 ? <p mt={10} style={{color: "yellow"}}>Du hast dich bereits angemeldet. Wenn du etwas ändern möchtest, schreibe einfach in den Discord.</p>
+                             :  <p mt={10} style={{color: "red"}}>Deine Anmeldung konnte nicht abgeschickt werden! Warte einen Moment und versuche es erneut oder kontaktiere uns über Discord!</p>
                         }
                     </form>
                 </Box>

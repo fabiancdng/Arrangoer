@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"strconv"
 
 	"github.com/fabiancdng/Arrangoer/internal/models"
@@ -153,10 +152,26 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 		return fiber.NewError(400)
 	}
 
+	token := &oauth2.Token{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+
+	// Den Access-Token benutzen, um Daten des Benutzers abzurufen
+	res, err := api.discordAuth.Client(context.Background(), token).Get("https://discordapp.com/api/users/@me")
+
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+
+	discordUser := new(DiscordUser)
+	json.Unmarshal(body, &discordUser)
+
+	application.UserID = discordUser.ID
+
 	err = api.db.SaveApplication(application)
 	if err != nil {
-		log.Println(err)
-		return fiber.NewError(500)
+		return err
 	}
 
 	return ctx.SendStatus(200)
