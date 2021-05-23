@@ -45,33 +45,41 @@ func main() {
 		log.Panic(err)
 	}
 
+	// API (& ihren Webserver) in Goroutine starten
+	// und einen Channel zur Kommunikation zwischen Bot und API (/Website) aufbauen
 	apiChannel := make(chan string)
-	go api.Run(apiChannel)
-	// go func() {
-	// 	for {
-	// 		apiCommand := <-apiChannel
-	// 		log.Println(apiCommand)
-	// 		time.Sleep(1 * time.Second)
-	// 	}
-	// }()
+	api, err := api.NewAPI(config)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	go api.RunAPI(apiChannel)
 
 	log.Println("Der Bot läuft jetzt! // Er kann mit STRG+C beendet werden.")
 
+	// Channel zwischen Main und Discord Session Routine, der Platz für max. eine Fehlermeldung hat
 	sessionChannel := make(chan os.Signal, 1)
+
+	// Auf bestimmte syscalls hören und diese ggf. in den Channel schicken
+	// um ihn zu schließen und das Programm zu beenden
 	signal.Notify(sessionChannel, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
+	// Blocken durch lesen des Channels, bis ein Fehler auftritt
 	<-sessionChannel
 
 	log.Println("Der Bot wurde gestopp!\n Ausloggen...")
 
+	// Session sauber schließen
 	session.Close()
 }
 
+// Registrierung aller Event Handler, auf die der Bot hören soll
 func registerEvents(session *discordgo.Session) {
 	session.AddHandler(events.NewReadyHandler().Handler)
 	session.AddHandler(events.NewJoinHanlder().Handler)
 }
 
+// Registrierung aller Commands, auf die der Bot hören soll und deren Handler
 func registerCommands(session *discordgo.Session, config *config.Config) {
 	commandHandler := commands.NewCommandHandler(config.Prefix)
 
@@ -79,6 +87,7 @@ func registerCommands(session *discordgo.Session, config *config.Config) {
 	commandHandler.RegisterCommand(&commands.CommandSignup{})
 	commandHandler.RegisterCommand(&commands.CommandTeam{})
 	commandHandler.RegisterCommand(&commands.CommandClear{})
+	// Registrierung der Command-Permissions-Middleware, die die Permissions überprüft
 	commandHandler.RegisterMiddleware(&commands.MiddlewarePermissions{})
 
 	session.AddHandler(commandHandler.HandleMessage)

@@ -1,11 +1,7 @@
 package api
 
 import (
-	"context"
-	"encoding/json"
-	"io/ioutil"
 	"log"
-	"strconv"
 
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/gofiber/fiber/v2"
@@ -14,63 +10,20 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type DiscordUser struct {
-	ID            string `json:"id"`
-	Username      string `json:"username"`
-	Avatar        string `json:"avatar"`
-	Discriminator string `json:"discriminator"`
+type API struct {
+	// Fiber App (webserver, fiber middlewares, etc.)
+	app *fiber.App
+	// Store für sessions
+	store *session.Store
+	// Geparste config.json
+	config *config.Config
+	// Config für Discord OAuth2 Middleware
+	discordAuth *oauth2.Config
+	// Zufälliger String, der vom Login geschickt und im Callback validiert wird
+	state string
 }
 
-type DiscordGuild struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Icon        string `json:"icon"`
-	Permissions string `json:"permissions_new"`
-}
-
-type CallbackRequest struct {
-	Sate string `query:"state"`
-	Code string `query:"code"`
-}
-
-type Application struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Team  string `json:"team"`
-}
-
-func authorize(ctx *fiber.Ctx, store *session.Store) (string, string, error) {
-	sess, err := store.Get(ctx)
-	if err != nil || sess == nil {
-		return "", "", fiber.NewError(500, "error processing session")
-	}
-
-	defer sess.Save()
-
-	sessionAccessToken := sess.Get("dc_access_token")
-	if sessionAccessToken == nil {
-		return "", "", fiber.NewError(401)
-	}
-
-	accessToken := sessionAccessToken.(string)
-
-	sessionRefreshToken := sess.Get("dc_refresh_token")
-	if sessionAccessToken == nil {
-		return accessToken, "", fiber.NewError(401)
-	}
-
-	refreshToken := sessionRefreshToken.(string)
-
-	return accessToken, refreshToken, nil
-}
-
-func Run(apiChannel chan string) {
-	config, err := config.ParseConfig("./config/config.json")
-	if err != nil {
-		log.Panic(err)
-	}
-
-	// Zufälliger String, der von Login geschickt und im Callback validiert wird
+func NewAPI(config *config.Config) (*API, error) {
 	var state string = "v6uhSq6eWsnyAp"
 
 	discordAuth := &oauth2.Config{
@@ -84,148 +37,39 @@ func Run(apiChannel chan string) {
 	app := fiber.New()
 	store := session.New()
 
-	app.Get("/api/auth", func(ctx *fiber.Ctx) error {
-		// Leite an die Oauth2 Authorization Seite weiter
-		return ctx.Redirect(discordAuth.AuthCodeURL(state), 307)
-	})
+	api := &API{
+		app:         app,
+		store:       store,
+		config:      config,
+		discordAuth: discordAuth,
+		state:       state,
+	}
 
-	app.Get("/api/auth/get/:endpoint", func(ctx *fiber.Ctx) error {
-		accessToken, refreshToken, err := authorize(ctx, store)
-		if accessToken == "" || refreshToken == "" || err != nil {
-			return fiber.NewError(401)
-		}
+	api.registerHandlers()
 
-		token := &oauth2.Token{
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
-		}
+	return api, nil
+}
 
-		var endpoint string
+func (api *API) registerHandlers() {
+	// Hauptgruppe für alle API Endpoints
+	// Routes für /api/*
+	apiGroup := api.app.Group("/api")
 
-		switch ctx.Params("endpoint") {
-		case "guild":
-			endpoint = "https://discordapp.com/api/users/@me/guilds"
-		default:
-			endpoint = "https://discordapp.com/api/users/@me"
-		}
+	// Untergruppe für Authentication Endpoints
+	// Routes für /api/auth/*
+	apiAuthGroup := apiGroup.Group("/auth")
+	apiAuthGroup.Get("/", api.auth)
+	apiAuthGroup.Get("/callback", api.authCallback)
+	apiAuthGroup.Get("/get/:endpoint", api.authGetFromEndpoint)
+	apiAuthGroup.Get("/logout", api.authLogout)
 
-		// Den Access-Token benutzen, um Daten des Benutzers abzurufen
-		res, err := discordAuth.Client(context.Background(), token).Get(endpoint)
+	// Untergruppe für Anmeldungs Endpoints
+	// Routes für /api/application/*
+	apiApplicationGroup := apiGroup.Group("/application")
+	apiApplicationGroup.Post("/submit", api.applicationSubmit)
+}
 
-		if err != nil || res.StatusCode != 200 {
-			return fiber.NewError(500, "couldn't use the access token")
-		}
-
-		defer res.Body.Close()
-
-		body, err := ioutil.ReadAll(res.Body)
-
-		if err != nil {
-			return fiber.NewError(500, "an error occured while attempting to parse request body")
-		}
-
-		switch ctx.Params("endpoint") {
-		case "guild":
-			var discordGuilds []*DiscordGuild
-			json.Unmarshal(body, &discordGuilds)
-
-			var isUserMemberOfGuild bool = false
-			var isUserAdminOfGuild bool = false
-
-			for _, guild := range discordGuilds {
-				// Prüfen, ob der Nutzer bereits auf dem Server ist
-				if guild.ID == config.ServerID {
-					isUserMemberOfGuild = true
-					// Prüfen, ob der Nutzer Admin-Rechte auf dem Server hat
-					permissions, _ := strconv.Atoi(guild.Permissions)
-					if permissions&8 > 0 {
-						isUserAdminOfGuild = true
-					}
-
-					break
-				}
-			}
-
-			return ctx.JSON(fiber.Map{
-				"user_is_member": isUserMemberOfGuild,
-				"user_is_admin":  isUserAdminOfGuild,
-				"invite_link":    config.InviteLink,
-			})
-
-		default:
-			var discordUser DiscordUser
-			json.Unmarshal(body, &discordUser)
-
-			return ctx.JSON(discordUser)
-		}
-
-	})
-
-	app.Get("/api/auth/callback", func(ctx *fiber.Ctx) error {
-		callbackRequest := new(CallbackRequest)
-
-		err := ctx.QueryParser(callbackRequest)
-		if err != nil {
-			return fiber.NewError(400, "invalid request body")
-		}
-
-		if callbackRequest.Sate != state {
-			return fiber.NewError(400, "state doesn't match")
-		}
-
-		// Den Code für einen Access-Token eintauschen
-		token, err := discordAuth.Exchange(context.Background(), callbackRequest.Code)
-
-		if err != nil {
-			return fiber.NewError(500, "an error occured at code/token exchange")
-		}
-
-		sess, err := store.Get(ctx)
-		if err != nil {
-			return fiber.NewError(500, "error processing session")
-		}
-
-		defer sess.Save()
-
-		// Discord Access- & Refresh-Token in serverseitiger Session speichern
-		sess.Set("dc_access_token", token.AccessToken)
-		sess.Set("dc_refresh_token", token.AccessToken)
-
-		return ctx.Redirect("http://localhost:3000")
-	})
-
-	app.Get("/api/auth/logout", func(ctx *fiber.Ctx) error {
-		sess, err := store.Get(ctx)
-		if err != nil || sess == nil {
-			return fiber.NewError(500, "error processing session")
-		}
-
-		if err := sess.Destroy(); err != nil {
-			return fiber.NewError(500, "error deleting session")
-		}
-
-		return ctx.SendStatus(200)
-	})
-
-	app.Post("/api/application/submit", func(ctx *fiber.Ctx) error {
-		accessToken, refreshToken, err := authorize(ctx, store)
-		if accessToken == "" || refreshToken == "" || err != nil {
-			return fiber.NewError(401)
-		}
-
-		application := new(Application)
-
-		err = ctx.BodyParser(application)
-		if err != nil {
-			return fiber.NewError(400)
-		}
-
-		log.Println(application)
-
-		return ctx.SendStatus(200)
-	})
-
+func (api *API) RunAPI(apiChannel chan string) {
 	log.Println("API ist bereit!")
-
-	app.Listen(":5000")
+	api.app.Listen(":5000")
 }
