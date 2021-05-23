@@ -40,7 +40,7 @@ func main() {
 	////////////////////////
 
 	db := new(sqlite.SQLite)
-	if err = db.Open(); err != nil {
+	if err = db.Prepare(); err != nil {
 		panic(err)
 	}
 

@@ -1,7 +1,13 @@
 package database
 
-// Definiert, welche Funktionen eine Datenbank Middleware vorweisen muss
+import (
+	"github.com/fabiancdng/Arrangoer/internal/models"
+)
+
+// Definiert, welche Funktionen eine Datenbank-Middleware vorweisen muss
 type Middleware interface {
-	// Datenbankverbindung aufbauen und Tabellen vorbereiten
-	Open() error
+	// Prüfen, ob die Datenbank-Datei
+	Prepare() error
+	// Anmeldung für den Wettbewerb in der Datenbank speichern
+	SaveApplication(*models.Application) error
 }

@@ -7,6 +7,7 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/fabiancdng/Arrangoer/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/oauth2"
 )
@@ -145,7 +146,7 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 		return fiber.NewError(401)
 	}
 
-	application := new(Application)
+	application := new(models.Application)
 
 	err = ctx.BodyParser(application)
 	if err != nil {

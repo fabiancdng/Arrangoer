@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/fabiancdng/Arrangoer/internal/models"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -14,18 +15,18 @@ type SQLite struct {
 	db *sql.DB
 }
 
-func (sqlite *SQLite) Open() error {
+func (sqlite *SQLite) Prepare() error {
 	var err error
 
-	if _, err := os.Stat("./database.db"); os.IsNotExist(err) {
-		err := ioutil.WriteFile("./database.db", []byte(""), 0755)
+	if _, err := os.Stat("./db.db"); os.IsNotExist(err) {
+		err := ioutil.WriteFile("./db.db", []byte(""), 0755)
 		if err != nil {
 			return err
 		}
 		log.Println("Datenbank-Datei wurde erstellt.")
 	}
 
-	sqlite.db, err = sql.Open("sqlite3", "./database.db")
+	sqlite.db, err = sql.Open("sqlite3", "./db.db")
 	if err != nil {
 		return err
 	}
@@ -36,6 +37,15 @@ func (sqlite *SQLite) Open() error {
 	}
 
 	sqlite.db.Close()
+
+	return nil
+}
+
+func (sqlite *SQLite) SaveApplication(application *models.Application) error {
+	_, err := sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, %s, %s, %s)", application.Name, application.Email, application.Team)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
