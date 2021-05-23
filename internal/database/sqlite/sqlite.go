@@ -15,7 +15,7 @@ type SQLite struct {
 	db *sql.DB
 }
 
-func (sqlite *SQLite) Prepare() error {
+func (sqlite *SQLite) Open() error {
 	var err error
 
 	if _, err := os.Stat("./db.db"); os.IsNotExist(err) {
@@ -36,13 +36,18 @@ func (sqlite *SQLite) Prepare() error {
 		return err
 	}
 
-	sqlite.db.Close()
+	return nil
+}
 
+func (sqlite *SQLite) Close() error {
+	if err := sqlite.db.Close(); err != nil {
+		return err
+	}
 	return nil
 }
 
 func (sqlite *SQLite) SaveApplication(application *models.Application) error {
-	_, err := sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, %s, %s, %s)", application.Name, application.Email, application.Team)
+	_, err := sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, ?, ?, ?)", application.Name, application.Email, application.Team)
 	if err != nil {
 		return err
 	}

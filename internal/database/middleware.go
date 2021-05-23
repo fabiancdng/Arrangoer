@@ -6,8 +6,8 @@ import (
 
 // Definiert, welche Funktionen eine Datenbank-Middleware vorweisen muss
 type Middleware interface {
-	// Prüfen, ob die Datenbank-Datei
-	Prepare() error
+	Open() error
+	Close() error
 	// Anmeldung für den Wettbewerb in der Datenbank speichern
-	SaveApplication(*models.Application) error
+	SaveApplication(application *models.Application) error
 }

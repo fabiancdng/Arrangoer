@@ -21,7 +21,7 @@ type API struct {
 	state       string
 }
 
-func NewAPI(config *config.Config) (*API, error) {
+func NewAPI(config *config.Config, db database.Middleware) (*API, error) {
 	// Zufälliger String, der zwischen Login und Callback Seite weitergegeben wird
 	var state string = "v6uhSq6eWsnyAp"
 
@@ -38,6 +38,7 @@ func NewAPI(config *config.Config) (*API, error) {
 
 	api := &API{
 		app:         app,
+		db:          db,
 		store:       store,
 		config:      config,
 		discordAuth: discordAuth,

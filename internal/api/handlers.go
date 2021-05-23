@@ -153,7 +153,11 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 		return fiber.NewError(400)
 	}
 
-	log.Println(application)
+	err = api.db.SaveApplication(application)
+	if err != nil {
+		log.Println(err)
+		return fiber.NewError(500)
+	}
 
 	return ctx.SendStatus(200)
 }

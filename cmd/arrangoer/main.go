@@ -40,7 +40,7 @@ func main() {
 	////////////////////////
 
 	db := new(sqlite.SQLite)
-	if err = db.Prepare(); err != nil {
+	if err = db.Open(); err != nil {
 		panic(err)
 	}
 
@@ -70,7 +70,7 @@ func main() {
 	// API (& ihren Webserver) in Goroutine starten
 	// und einen Channel zur Kommunikation zwischen Bot und API (/Website) aufbauen
 	apiChannel := make(chan string)
-	api, err := api.NewAPI(config)
+	api, err := api.NewAPI(config, db)
 	if err != nil {
 		log.Panic(err)
 	}
