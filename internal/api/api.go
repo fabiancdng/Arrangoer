@@ -15,7 +15,7 @@ type API struct {
 	app *fiber.App
 	// Store für sessions
 	store *session.Store
-	// Geparste config.json
+	// Geparste config.yml
 	config *config.Config
 	// Config für Discord OAuth2 Middleware
 	discordAuth *oauth2.Config
@@ -28,8 +28,8 @@ func NewAPI(config *config.Config) (*API, error) {
 
 	discordAuth := &oauth2.Config{
 		RedirectURL:  "http://localhost:5000/api/auth/callback",
-		ClientID:     config.ClientID,
-		ClientSecret: config.ClientSecret,
+		ClientID:     config.Discord.ClientID,
+		ClientSecret: config.Discord.ClientSecret,
 		Scopes:       []string{discord.ScopeIdentify, discord.ScopeGuilds},
 		Endpoint:     discord.Endpoint,
 	}
@@ -71,5 +71,5 @@ func (api *API) registerHandlers() {
 
 func (api *API) RunAPI(apiChannel chan string) {
 	log.Println("API ist bereit!")
-	api.app.Listen(":5000")
+	api.app.Listen(api.config.API.AddressAndPort)
 }

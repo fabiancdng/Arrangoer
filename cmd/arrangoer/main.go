@@ -25,14 +25,14 @@ import (
 )
 
 func main() {
-	config, err := config.ParseConfig("./config/config.json")
+	config, err := config.ParseConfig("./config/config.yml")
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 
-	session, err := discordgo.New("Bot " + config.Token)
+	session, err := discordgo.New("Bot " + config.Discord.Token)
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 
 	session.Identify.Intents = discordgo.IntentsAll
@@ -81,7 +81,7 @@ func registerEvents(session *discordgo.Session) {
 
 // Registrierung aller Commands, auf die der Bot hören soll und deren Handler
 func registerCommands(session *discordgo.Session, config *config.Config) {
-	commandHandler := commands.NewCommandHandler(config.Prefix)
+	commandHandler := commands.NewCommandHandler(config.Discord.Prefix)
 
 	commandHandler.RegisterCommand(&commands.CommandTest{})
 	commandHandler.RegisterCommand(&commands.CommandSignup{})

@@ -1,31 +1,57 @@
 package config
 
 import (
-	"encoding/json"
+	"fmt"
 	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
-	Token          string `json:"token"`
-	ClientID       string `json:"client_id"`
-	ClientSecret   string `json:"client_secret"`
-	ServerID       string `json:"server_id"`
-	Prefix         string `json:"prefix"`
-	LobbyChannel   string `json:"lobbychannel"`
-	InviteLink     string `json:"invite_link"`
-	WelcomeMessage string `json:"welcomemessage"`
+	Discord struct {
+		Token          string `yaml:"token"`
+		ClientID       string `yaml:"client_id"`
+		ClientSecret   string `yaml:"client_secret"`
+		ServerID       string `yaml:"server_id"`
+		Prefix         string `yaml:"prefix"`
+		LobbyChannelID string `yaml:"lobby_channel_id"`
+		InviteLink     string `yaml:"invite_link"`
+		WelcomeMessage string `yaml:"welcome_message"`
+	} `yaml:"discord"`
+
+	API struct {
+		AddressAndPort string `yaml:"address_and_port"`
+	} `yaml:"api"`
 }
 
-func ParseConfig(fileName string) (*Config, error) {
-	file, err := os.Open(fileName)
+// Prüft, ob die Config-Datei existiert
+func validateConfigPath(path string) error {
+	s, err := os.Stat(path)
 	if err != nil {
+		return err
+	}
+	if s.IsDir() {
+		return fmt.Errorf("Die Config-Datei existiert nicht oder konnte nicht gelesen werden. (Pfad: '%s')", path)
+	}
+	return nil
+}
+
+// Parst die config.yml
+func ParseConfig(path string) (*Config, error) {
+	if err := validateConfigPath(path); err != nil {
 		return nil, err
 	}
 
 	config := new(Config)
 
-	err = json.NewDecoder(file).Decode(config)
+	file, err := os.Open(path)
 	if err != nil {
+		return nil, err
+	}
+
+	decoder := yaml.NewDecoder(file)
+
+	if err = decoder.Decode(&config); err != nil {
 		return nil, err
 	}
 

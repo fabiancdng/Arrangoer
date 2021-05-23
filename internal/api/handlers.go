@@ -97,7 +97,7 @@ func (api *API) authGetFromEndpoint(ctx *fiber.Ctx) error {
 
 		for _, guild := range discordGuilds {
 			// Prüfen, ob der Nutzer bereits auf dem Server ist
-			if guild.ID == api.config.ServerID {
+			if guild.ID == api.config.Discord.ServerID {
 				isUserMemberOfGuild = true
 				// Prüfen, ob der Nutzer Admin-Rechte auf dem Server hat
 				permissions, _ := strconv.Atoi(guild.Permissions)
@@ -112,7 +112,7 @@ func (api *API) authGetFromEndpoint(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{
 			"user_is_member": isUserMemberOfGuild,
 			"user_is_admin":  isUserAdminOfGuild,
-			"invite_link":    api.config.InviteLink,
+			"invite_link":    api.config.Discord.InviteLink,
 		})
 
 	default:
