@@ -21,14 +21,32 @@ import (
 	"github.com/fabiancdng/Arrangoer/internal/api"
 	"github.com/fabiancdng/Arrangoer/internal/commands"
 	"github.com/fabiancdng/Arrangoer/internal/config"
+	"github.com/fabiancdng/Arrangoer/internal/database/sqlite"
 	"github.com/fabiancdng/Arrangoer/internal/events"
 )
 
 func main() {
+	/////////////////////
+	//  	CONFIG	   //
+	/////////////////////
+
 	config, err := config.ParseConfig("./config/config.yml")
 	if err != nil {
 		panic(err)
 	}
+
+	////////////////////////
+	//  	DATABASE	  //
+	////////////////////////
+
+	db := new(sqlite.SQLite)
+	if err = db.Open(); err != nil {
+		panic(err)
+	}
+
+	///////////////////////////
+	//    DISCORD SESSION 	 //
+	///////////////////////////
 
 	session, err := discordgo.New("Bot " + config.Discord.Token)
 	if err != nil {
@@ -44,6 +62,10 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	////////////////////////////////
+	//  	API / WEB SERVER	  //
+	////////////////////////////////
 
 	// API (& ihren Webserver) in Goroutine starten
 	// und einen Channel zur Kommunikation zwischen Bot und API (/Website) aufbauen

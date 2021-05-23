@@ -7,10 +7,12 @@ require (
 	github.com/gofiber/fiber/v2 v2.10.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/mattn/go-sqlite3 v1.14.7
 	github.com/ravener/discord-oauth2 v0.0.0-20210409042811-96ad60db2cdb
 	github.com/valyala/fasthttp v1.25.0 // indirect
-	golang.org/x/net v0.0.0-20210520170846-37e1c6afe023 // indirect
+	golang.org/x/net v0.0.0-20210521195947-fe42d452be8f // indirect
 	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c
+	golang.org/x/sys v0.0.0-20210521203332-0cec03c779c1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0
 )

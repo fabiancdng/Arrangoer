@@ -19,6 +19,5 @@ func (commandTeam *CommandTeam) Execute(ctx *Context) (err error) {
 		Color:       14680128,
 	}
 	_, err = ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, &embed)
-	err = ctx.Session.ChannelMessageDelete(ctx.Message.ChannelID, ctx.Message.ID)
 	return
 }

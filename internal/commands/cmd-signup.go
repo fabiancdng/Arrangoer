@@ -19,6 +19,5 @@ func (commandSignup *CommandSignup) Execute(ctx *Context) (err error) {
 		Color:       46074,
 	}
 	_, err = ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, &embed)
-	err = ctx.Session.ChannelMessageDelete(ctx.Message.ChannelID, ctx.Message.ID)
 	return
 }

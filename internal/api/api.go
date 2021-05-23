@@ -4,26 +4,25 @@ import (
 	"log"
 
 	"github.com/fabiancdng/Arrangoer/internal/config"
+	"github.com/fabiancdng/Arrangoer/internal/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/ravener/discord-oauth2"
 	"golang.org/x/oauth2"
 )
 
+// WebServer für die REST API Routes
 type API struct {
-	// Fiber App (webserver, fiber middlewares, etc.)
-	app *fiber.App
-	// Store für sessions
-	store *session.Store
-	// Geparste config.yml
-	config *config.Config
-	// Config für Discord OAuth2 Middleware
+	app         *fiber.App
+	db          database.Middleware
+	store       *session.Store
+	config      *config.Config
 	discordAuth *oauth2.Config
-	// Zufälliger String, der vom Login geschickt und im Callback validiert wird
-	state string
+	state       string
 }
 
 func NewAPI(config *config.Config) (*API, error) {
+	// Zufälliger String, der zwischen Login und Callback Seite weitergegeben wird
 	var state string = "v6uhSq6eWsnyAp"
 
 	discordAuth := &oauth2.Config{
