@@ -28,6 +28,7 @@ func (joinHandler *JoinHandler) Handler(session *discordgo.Session, event *disco
 		return
 	}
 	welcomeMessageParsed := strings.ReplaceAll(config.Discord.WelcomeMessage, "//USER//", event.User.Mention())
+	welcomeMessageParsed = strings.ReplaceAll(welcomeMessageParsed, "///", "\n")
 
 	embed := &discordgo.MessageEmbed{
 		Title:       "Willkommen!",

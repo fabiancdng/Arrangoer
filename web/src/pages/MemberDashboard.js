@@ -39,6 +39,8 @@ const UserDashboard = () => {
                             {colorMode === 'light' ? <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-Black.png" /> : <Image boxSize="30px" mr={3} alt="" src="/assets/Discord-Logo-White.png" />}
                             Dem Discord-Server beitreten
                         </Button>
+                        <Divider my={5} />
+                        <Text mt={5} textAlign="center">Wenn du dem Server beigetreten bist, kannst du einfach diese Seite aktualisieren.</Text>
                     </Box>)
                 }
             </Flex>

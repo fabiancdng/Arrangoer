@@ -12,7 +12,8 @@ discord:
     # Die Channel-ID des Channels, in den die Willkommens-Nachrichten geschickt werden
     lobby_channel_id: ''
     # Hier kann die Willkommens-Nachricht personalisiert werden
-    welcome_message: '**Hey, //USER// 👋**\n **Willkommen auf dem Discord des Programmier-Wettbewerbs.**\n Schön, dass du da bist!'
+    # //USER// = "Nutzermention", /// = Zeilenumbruch
+    welcome_message: '**Hey, //USER// 👋**/// **Willkommen auf dem Discord des Programmier-Wettbewerbs.**/// Schön, dass du da bist!'
 
 api:
     # Keine Adresse = API läuft auf 0.0.0.0

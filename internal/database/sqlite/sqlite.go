@@ -49,12 +49,12 @@ func (sqlite *SQLite) Close() error {
 
 func (sqlite *SQLite) SaveApplication(application *models.Application) error {
 	id := 0
-	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `user_id`='?'", application.UserID).Scan(&id)
+	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `user_id`=?", application.UserID).Scan(&id)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return fiber.NewError(500)
 		}
-
+	} else {
 		return fiber.NewError(302)
 	}
 
