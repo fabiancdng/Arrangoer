@@ -146,7 +146,7 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 		return fiber.NewError(401)
 	}
 
-	application := new(models.Application)
+	application := new(models.ApplicationRequest)
 
 	err = ctx.BodyParser(application)
 	if err != nil {

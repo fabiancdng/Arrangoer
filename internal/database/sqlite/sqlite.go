@@ -56,10 +56,10 @@ func (sqlite *SQLite) Close() error {
 
 // Speichert eine Anmeldung für den Wettbewerb in der Datenbank
 // Ebenso wie das Team (bzw. erstellt es ggf.)
-func (sqlite *SQLite) SaveApplication(application *models.Application) error {
+func (sqlite *SQLite) SaveApplication(application *models.ApplicationRequest) error {
 	// Prüfen, ob der Nutzer sich bereits angemeldet hat
 	id := 0
-	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `name`=?", application.Team).Scan(&id)
+	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `name`=?", application.Name).Scan(&id)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return fiber.NewError(500)
@@ -70,6 +70,7 @@ func (sqlite *SQLite) SaveApplication(application *models.Application) error {
 		return fiber.NewError(302)
 	}
 
+	var teamID int
 	// Prüfen, ob das eingegebene Team bereits existiert
 	err = sqlite.db.QueryRow("SELECT `id` FROM `teams` WHERE `name`=?", application.Team).Scan(&id)
 	if err != nil {
@@ -78,19 +79,28 @@ func (sqlite *SQLite) SaveApplication(application *models.Application) error {
 		}
 
 		// Das Team existiert (in der DB) noch nicht und muss daher erstellt werden
-		_, err = sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, ?, ?, ?, ?, 0)", application.Name, application.Email, application.Team, application.UserID)
+		var res sql.Result
+		res, err = sqlite.db.Exec("INSERT INTO `teams` VALUES (NULL, ?, 0)", application.Team)
 		if err != nil {
 			return fiber.NewError(500)
 		}
 
+		var lastInsertId int64
+		lastInsertId, err = res.LastInsertId()
+		if err != nil {
+			return fiber.NewError(500)
+		}
+
+		teamID = int(lastInsertId)
+
 	} else {
 		// Das Team existiert (in der DB) bereits
-		return fiber.NewError(302)
+		teamID = id
 	}
 
 	// Die Anmeldung in der Datenbank speichern
 	// Das Team wird über eine Team-ID (die auf eine andere Tabelle weist) referenziert
-	_, err = sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, ?, ?, ?, ?, 0)", application.Name, application.Email, application.Team, application.UserID)
+	_, err = sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, ?, ?, ?, ?, 0)", application.Name, application.Email, teamID, application.UserID)
 	if err != nil {
 		return fiber.NewError(500)
 	}
@@ -102,7 +112,22 @@ func (sqlite *SQLite) SaveApplication(application *models.Application) error {
 
 // Gibt eine Liste mit allen Anmeldungen (aus der Datenbank) zurück
 func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
-	rows, err := sqlite.db.Query("SELECT * FROM `applications`")
+	// Alle Teams auslesen
+	rows, err := sqlite.db.Query("SELECT * FROM `teams`")
+	if err != nil {
+		return nil, fiber.NewError(500)
+	}
+
+	// Team-ID auf Team struct mappen
+	teams := make(map[int]models.Team)
+
+	currentTeam := new(models.Team)
+	for rows.Next() {
+		rows.Scan(&currentTeam.ID, &currentTeam.Name, &currentTeam.Approved)
+		teams[currentTeam.ID] = *currentTeam
+	}
+
+	rows, err = sqlite.db.Query("SELECT * FROM `applications`")
 	if err != nil {
 		return nil, fiber.NewError(500)
 	}
@@ -110,8 +135,10 @@ func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 	currentApplication := new(models.Application)
 	applications := []models.Application{}
 
+	var currentTeamID int
 	for rows.Next() {
-		rows.Scan(&currentApplication.ID, &currentApplication.Name, &currentApplication.Email, &currentApplication.Team, &currentApplication.UserID, &currentApplication.Accepted)
+		rows.Scan(&currentApplication.ID, &currentApplication.Name, &currentApplication.Email, &currentTeamID, &currentApplication.UserID, &currentApplication.Accepted)
+		currentApplication.Team = teams[currentTeamID]
 		applications = append(applications, *currentApplication)
 	}
 	log.Println(applications)

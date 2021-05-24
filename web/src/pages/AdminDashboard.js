@@ -31,11 +31,19 @@ const AdminDashboard = () => {
             <Box p={5} width={{base: "100%", md: "23%"}} mr={5} overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
                 <Heading size="lg">Teams</Heading>
                 {
-                    approvedApplications.length < 1 ? <p>Loading...</p>
+                    pendingApplications.length < 1 ? <p>Keine Daten vorhanden.</p>
+                    : pendingApplications.map(application => (
+                        <Flex p={5} m={5} flexDirection="column" justifyContent="space-between" alignItems="center" borderWidth={1} borderRadius={8} boxShadow="lg">
+                            <VStack mb={{base: 5, md: 0}} boxSize="100%"><DragHandleIcon boxSize="25px" /><p style={{fontSize: "17px"}}>{application.team.name === "" ? 'Kein Team' : application.team.name}</p></VStack>
+                            <Button mt={3} rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">Erstellen</Button>
+                        </Flex>
+                    ))
+                }
+                {
+                    approvedApplications.length < 1 ? <p>Keine Daten vorhanden.</p>
                     : approvedApplications.map(application => (
                         <Flex p={5} m={5} flexDirection="column" justifyContent="space-between" alignItems="center" borderWidth={1} borderRadius={8} boxShadow="lg">
-                            <VStack mb={{base: 5, md: 0}} boxSize="100%"><DragHandleIcon boxSize="25px" /><p style={{fontSize: "17px"}}>{application.team === "" ? 'Kein Team' : application.team}</p></VStack>
-                            <Button mt={3} rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">Erstellen</Button>
+                            <VStack mb={{base: 5, md: 0}} boxSize="100%"><DragHandleIcon boxSize="25px" /><p style={{fontSize: "17px"}}>{application.team.name === "" ? 'Kein Team' : application.team.name}</p></VStack>
                         </Flex>
                     ))
                 }
@@ -44,24 +52,24 @@ const AdminDashboard = () => {
             <Box p={5} width={{base: "100%", md: "68%"}} overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
                 <Heading size="lg">Ausstehende Anmeldungen</Heading>
                 {
-                    pendingApplications.length < 1 ? <p>Loading...</p>
+                    pendingApplications.length < 1 ? <p>Keine Daten vorhanden.</p>
                     : pendingApplications.map(application => (
                         <Flex p={5} my={5} flexDirection={{base: "column", md: "row"}} justifyContent="space-between" alignItems="center" borderWidth={1} borderRadius={8} boxShadow="lg">
                             <VStack mb={{base: 5, md: 0}} boxSize="25%"><AtSignIcon boxSize="20px" /><p>{application.name}</p></VStack>
                             <VStack mb={{base: 5, md: 0}} boxSize="25%"><EmailIcon boxSize="20px" /><p>{application.email}</p></VStack>
-                            <VStack mb={{base: 5, md: 0}} boxSize="25%"><DragHandleIcon boxSize="20px" /><p>{application.team === "" ? 'Kein Team' : application.team}</p></VStack>
+                            <VStack mb={{base: 5, md: 0}} boxSize="25%"><DragHandleIcon boxSize="20px" /><p>{application.team.name === "" ? 'Kein Team' : application.team.name}</p></VStack>
                             <Button rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">Annehmen</Button>
                         </Flex>
                     ))
                 }
                 <Heading mt={50} size="lg">Angenommene Anmeldungen</Heading>
                 {
-                    approvedApplications.length < 1 ? <p>Loading...</p>
+                    approvedApplications.length < 1 ? <p>Keine Daten vorhanden.</p>
                     : approvedApplications.map(application => (
                         <Flex p={5} my={5} flexDirection={{base: "column", md: "row"}} justifyContent="space-between" alignItems="center" borderWidth={1} borderRadius={8} boxShadow="lg">
                             <VStack mb={{base: 5, md: 0}} boxSize="20%"><AtSignIcon boxSize="20px" /><p>{application.name}</p></VStack>
                             <VStack mb={{base: 5, md: 0}} boxSize="20%"><EmailIcon boxSize="20px" /><p>{application.email}</p></VStack>
-                            <VStack mb={{base: 5, md: 0}} boxSize="20%"><DragHandleIcon boxSize="20px" /><p>{application.team === "" ? 'Kein Team' : application.team}</p></VStack>
+                            <VStack mb={{base: 5, md: 0}} boxSize="20%"><DragHandleIcon boxSize="20px" /><p>{application.team.name === "" ? 'Kein Team' : application.team.name}</p></VStack>
                         </Flex>
                     ))
                 }
