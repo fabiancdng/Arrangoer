@@ -15,6 +15,11 @@ Der Bot schickt automatisch eine Begrüßungsnachricht für neu gejointe Nutzer 
 
 <img width="400px" src="assets/screenshots/welcome-message.png" />
 
+## Einrichtung / Konfiguration des Bots
+Der Bot verfügt über eine 'Config-Datei', in die alle Daten eingetragen werden können, die er braucht, um zu funktionieren. Eine *'example.config.yml'* befindet sich im Ordner 'config'. Diese kann einfach kopiert und/oder umbenannt werden zu *'config.yml'*. Nachdem dies erledigt ist, müssen die Werte in die Config eingetragen werden (siehe Kommentare in der Datei).
+
+Zudem muss in ```web/src/config.js``` noch die URL eingetragen werden, unter der der Bot (bzw. seine API) erreichbar ist.
+
 Weitere Dokumentation folgt.
 
 <br>

@@ -4,19 +4,20 @@ import { Heading, Flex } from "@chakra-ui/layout"
 import { IconButton, Image, useColorMode } from '@chakra-ui/react'
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
+import { ApiAddress } from '../config'
 
 const Header = () => {
     const { user, loggedIn, setUser, setLoggedIn, setGuild } = useContext(UserContext)
     const { colorMode, toggleColorMode } = useColorMode();
 
     const logout = () => {
-        fetch("/api/auth/logout")
+        fetch(ApiAddress + "/api/auth/logout", {credentials: "include"})
             .then(res => {
                 if(res.ok) {
                     setUser("pending")
                     setGuild("pending")
                     setLoggedIn(false)
-                    window.location.href = "/"
+                    window.location.href = '/'
                 }
             })
     }
