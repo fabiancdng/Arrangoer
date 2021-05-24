@@ -15,13 +15,14 @@ import (
 type API struct {
 	app         *fiber.App
 	db          database.Middleware
+	channel     chan string
 	store       *session.Store
 	config      *config.Config
 	discordAuth *oauth2.Config
 	state       string
 }
 
-func NewAPI(config *config.Config, db database.Middleware) (*API, error) {
+func NewAPI(config *config.Config, db database.Middleware, channel chan string) (*API, error) {
 	// Zufälliger String, der zwischen Login und Callback Seite weitergegeben wird
 	var state string = "v6uhSq6eWsnyAp"
 
@@ -39,6 +40,7 @@ func NewAPI(config *config.Config, db database.Middleware) (*API, error) {
 	api := &API{
 		app:         app,
 		db:          db,
+		channel:     channel,
 		store:       store,
 		config:      config,
 		discordAuth: discordAuth,
@@ -69,7 +71,7 @@ func (api *API) registerHandlers() {
 	apiApplicationGroup.Post("/submit", api.applicationSubmit)
 }
 
-func (api *API) RunAPI(apiChannel chan string) {
+func (api *API) RunAPI() {
 	log.Println("API ist bereit!")
 	api.app.Listen(api.config.API.AddressAndPort)
 }

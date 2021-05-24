@@ -32,7 +32,7 @@ func (sqlite *SQLite) Open() error {
 		return err
 	}
 
-	_, err = sqlite.db.Exec("CREATE TABLE IF NOT EXISTS `applications` (`id` INTEGER PRIMARY KEY, `name` VARCHAR(100), `email` VARCHAR(200), `team` VARCHAR(100), `user_id` VARCHAR(100))")
+	_, err = sqlite.db.Exec("CREATE TABLE IF NOT EXISTS `applications` (`id` INTEGER PRIMARY KEY, `name` VARCHAR(100), `email` VARCHAR(200), `team` VARCHAR(100), `user_id` VARCHAR(100), `accepted` INT)")
 	if err != nil {
 		return err
 	}
@@ -58,12 +58,12 @@ func (sqlite *SQLite) SaveApplication(application *models.Application) error {
 		return fiber.NewError(302)
 	}
 
-	log.Println(id, application.UserID)
-
-	_, err = sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, ?, ?, ?, ?)", application.Name, application.Email, application.Team, application.UserID)
+	_, err = sqlite.db.Exec("INSERT INTO `applications` VALUES (NULL, ?, ?, ?, ?, 0)", application.Name, application.Email, application.Team, application.UserID)
 	if err != nil {
 		return fiber.NewError(500)
 	}
+
+	log.Printf("%s hat sich für den Wettbewerb angemeldet.", application.Name)
 
 	return nil
 }

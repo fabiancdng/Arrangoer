@@ -24,9 +24,10 @@ func (joinHandler *JoinHandler) Handler(session *discordgo.Session, event *disco
 
 	channel, err := session.Channel(config.Discord.LobbyChannelID)
 	if err != nil {
-		log.Println("Der Lobby-Channel aus der config.json kann nicht gefunden werden! Prüfe, ob der Bot ausreichende Berechtigungen hat und die Channel ID korrekt ist.")
+		log.Println("Der Lobby-Channel aus der config.yml kann nicht gefunden werden! Prüfe, ob der Bot ausreichende Berechtigungen hat und die Channel ID korrekt ist.")
 		return
 	}
+
 	welcomeMessageParsed := strings.ReplaceAll(config.Discord.WelcomeMessage, "//USER//", event.User.Mention())
 	welcomeMessageParsed = strings.ReplaceAll(welcomeMessageParsed, "///", "\n")
 

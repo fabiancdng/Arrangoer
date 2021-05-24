@@ -19,6 +19,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/fabiancdng/Arrangoer/internal/api"
+	"github.com/fabiancdng/Arrangoer/internal/apicommands"
 	"github.com/fabiancdng/Arrangoer/internal/commands"
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/fabiancdng/Arrangoer/internal/database/sqlite"
@@ -70,12 +71,20 @@ func main() {
 	// API (& ihren Webserver) in Goroutine starten
 	// und einen Channel zur Kommunikation zwischen Bot und API (/Website) aufbauen
 	apiChannel := make(chan string)
-	api, err := api.NewAPI(config, db)
+	api, err := api.NewAPI(config, db, apiChannel)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	go api.RunAPI(apiChannel)
+	// Auf Befehle aus dem apiChannel warten und diese ggf. ausführen
+	go (func() {
+		for {
+			apiCommand := <-apiChannel
+			apicommands.HandleAPICommand(session, apiCommand)
+		}
+	})()
+
+	go api.RunAPI()
 
 	log.Println("Der Bot läuft jetzt! // Er kann mit STRG+C beendet werden.")
 
