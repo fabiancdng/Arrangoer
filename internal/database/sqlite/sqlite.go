@@ -67,3 +67,20 @@ func (sqlite *SQLite) SaveApplication(application *models.Application) error {
 
 	return nil
 }
+
+func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
+	rows, err := sqlite.db.Query("SELECT * FROM `applications`")
+	if err != nil {
+		return nil, fiber.NewError(500)
+	}
+
+	currentApplication := new(models.Application)
+	applications := []models.Application{}
+
+	for rows.Next() {
+		rows.Scan(&currentApplication.ID, &currentApplication.Name, &currentApplication.Email, &currentApplication.Team, &currentApplication.UserID, &currentApplication.Accepted)
+		applications = append(applications, *currentApplication)
+	}
+	log.Println(applications)
+	return applications, nil
+}

@@ -69,6 +69,7 @@ func (api *API) registerHandlers() {
 	// Routes für /api/application/*
 	apiApplicationGroup := apiGroup.Group("/application")
 	apiApplicationGroup.Post("/submit", api.applicationSubmit)
+	apiApplicationGroup.Get("/list", api.applicationList)
 }
 
 func (api *API) RunAPI() {

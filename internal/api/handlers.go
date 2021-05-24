@@ -179,3 +179,12 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(200)
 }
+
+func (api *API) applicationList(ctx *fiber.Ctx) error {
+	applications, err := api.db.GetApplications()
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(applications)
+}

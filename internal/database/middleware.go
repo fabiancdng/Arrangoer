@@ -10,6 +10,6 @@ type Middleware interface {
 	Close() error
 	// Anmeldung für den Wettbewerb in der Datenbank speichern
 	SaveApplication(application *models.Application) error
-	// // Alle Anmeldungen einsehen
-	// GetApplications(application *models.Application) error
+	// Alle Anmeldungen einsehen
+	GetApplications() ([]models.Application, error)
 }
