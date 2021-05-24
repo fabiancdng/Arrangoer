@@ -1,3 +1,4 @@
+import React from 'react'
 import { LockIcon, MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Heading, Flex } from "@chakra-ui/layout"
 import { IconButton, Image, useColorMode } from '@chakra-ui/react'

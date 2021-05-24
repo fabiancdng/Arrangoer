@@ -6,6 +6,7 @@ import (
 	"github.com/fabiancdng/Arrangoer/internal/config"
 	"github.com/fabiancdng/Arrangoer/internal/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/ravener/discord-oauth2"
 	"golang.org/x/oauth2"
@@ -27,7 +28,7 @@ func NewAPI(config *config.Config, db database.Middleware, channel chan string) 
 	var state string = "v6uhSq6eWsnyAp"
 
 	discordAuth := &oauth2.Config{
-		RedirectURL:  "http://localhost:5000/api/auth/callback",
+		RedirectURL:  config.API.APIUrl + "/api/auth/callback",
 		ClientID:     config.Discord.ClientID,
 		ClientSecret: config.Discord.ClientSecret,
 		Scopes:       []string{discord.ScopeIdentify, discord.ScopeGuilds},
@@ -36,6 +37,8 @@ func NewAPI(config *config.Config, db database.Middleware, channel chan string) 
 
 	app := fiber.New()
 	store := session.New()
+
+	app.Use(cors.New())
 
 	api := &API{
 		app:         app,

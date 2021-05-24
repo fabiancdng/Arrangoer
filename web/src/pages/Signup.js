@@ -1,6 +1,8 @@
+import React from 'react'
 import { useState, useContext } from 'react'
 import { Box, Button, Divider, Flex, Heading, Input, Text } from '@chakra-ui/react'
 import { UserContext } from '../context/UserContext'
+import { ApiAddress } from '../config'
 
 const Signup = () => {
     const { user } = useContext(UserContext)
@@ -14,7 +16,7 @@ const Signup = () => {
         e.preventDefault()
         setSubmitted(2)
 
-        fetch("/api/application/submit", {
+        fetch(ApiAddress + "/api/application/submit", {
             method: 'POST',
             headers: {
               'Accept': 'application/json',

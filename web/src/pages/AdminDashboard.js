@@ -1,6 +1,8 @@
+import React from 'react'
 import { useEffect, useState } from 'react'
 import { Box, Button, Flex, Heading, Spacer, VStack } from '@chakra-ui/react'
 import { ArrowForwardIcon, AtSignIcon, DragHandleIcon, EmailIcon } from '@chakra-ui/icons'
+import { ApiAddress } from '../config'
 
 const AdminDashboard = () => {
     const [approvedApplications, setApprovedApplications] = useState([])
@@ -9,7 +11,7 @@ const AdminDashboard = () => {
     var newPenApplication = pendingApplications.slice()
 
     useEffect(() => {
-        fetch("/api/application/list")
+        fetch(ApiAddress + "/api/application/list")
             .then(async res => {
                 if(res.ok) {
                     res = await res.json()

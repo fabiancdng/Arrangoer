@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button } from "@chakra-ui/button"
 import { DragHandleIcon, EditIcon } from "@chakra-ui/icons"
 import { Image } from "@chakra-ui/image"

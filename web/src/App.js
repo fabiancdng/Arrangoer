@@ -1,3 +1,4 @@
+import React from 'react'
 import { useContext, useEffect } from 'react'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import Login from './pages/Login'
@@ -7,13 +8,14 @@ import Header from './components/Header'
 import { UserContext } from './context/UserContext'
 import Signup from './pages/Signup'
 import SelectTeam from './pages/SelectTeam'
+import { ApiAddress } from './config'
 
 const App = () => {
 
   const { guild, loggedIn, setLoggedIn, setUser, setGuild } = useContext(UserContext)
     
   useEffect(() => {
-    fetch("/api/auth/get/user")
+    fetch(ApiAddress + "/api/auth/get/user")
       .then(async res => {
         if(res.ok) {
           res = await res.json()
@@ -23,7 +25,7 @@ const App = () => {
         }
       })
 
-      fetch("/api/auth/get/guild")
+      fetch(ApiAddress + "/api/auth/get/guild")
         .then(async res => {
           if(res.ok) {
             res = await res.json();

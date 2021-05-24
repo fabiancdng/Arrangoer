@@ -91,14 +91,14 @@ func main() {
 	// Channel zwischen Main und Discord Session Routine, der Platz für max. eine Fehlermeldung hat
 	sessionChannel := make(chan os.Signal, 1)
 
-	// Auf bestimmte syscalls hören und diese ggf. in den Channel schicken
+	// Auf bestimmte Syscalls hören und diese ggf. in den Channel schicken
 	// um ihn zu schließen und das Programm zu beenden
 	signal.Notify(sessionChannel, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
-	// Blocken durch lesen des Channels, bis ein Fehler auftritt
+	// Blocken durch Lesen des Channels, bis ein Fehler auftritt
 	<-sessionChannel
 
-	log.Println("Der Bot wurde gestopp!\n Ausloggen...")
+	log.Println("Der Bot wurde gestoppt!\n Ausloggen...")
 
 	// Session sauber schließen
 	session.Close()

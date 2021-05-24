@@ -30,6 +30,6 @@ func HandleAPICommand(session *discordgo.Session, config *config.Config, rawAPIC
 			Description: message,
 			Color:       58176,
 		}
-		session.ChannelMessageSendEmbed(config.Discord.ApplicationChannelID, embed)
+		session.ChannelMessageSendEmbed(config.Discord.NotificationsChannelID, embed)
 	}
 }

@@ -49,7 +49,7 @@ func (api *API) authCallback(ctx *fiber.Ctx) error {
 	sess.Set("dc_access_token", token.AccessToken)
 	sess.Set("dc_refresh_token", token.AccessToken)
 
-	return ctx.Redirect("http://localhost:3000")
+	return ctx.Redirect(api.config.API.FrontendURL)
 }
 
 // Daten von der Discord OAuth2 API abrufen (wie Nutzerinfos oder Guildinfos)
