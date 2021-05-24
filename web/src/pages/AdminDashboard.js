@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, Flex, Heading, Image, SimpleGrid, Spacer, useColorMode, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Spacer, VStack } from '@chakra-ui/react'
 import { ArrowForwardIcon, AtSignIcon, DragHandleIcon, EmailIcon } from '@chakra-ui/icons'
 
 const AdminDashboard = () => {
     const [approvedApplications, setApprovedApplications] = useState([])
     const [pendingApplications, setPendingApplications] = useState([])
-
-    const { colorMode } = useColorMode()
     var newAppApplication = approvedApplications.slice()
     var newPenApplication = pendingApplications.slice()
 
@@ -26,23 +24,24 @@ const AdminDashboard = () => {
                     alert("Es gab einen Fehler beim Laden der Anmeldungen.")
                 }
             })
-    }, [setApprovedApplications, setPendingApplications])
+    }, [setApprovedApplications, setPendingApplications]) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <Flex flexDirection={{base: "column", md: "row"}} mx={10}>
-            <Box p={5} height="80vh" width={{base: "100%", md: "25%"}} mr={5} style={{scrollbarWidth: "none"}} overflow="scroll" overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
+            <Box p={5} width={{base: "100%", md: "23%"}} mr={5} overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
                 <Heading size="lg">Teams</Heading>
                 {
                     approvedApplications.length < 1 ? <p>Loading...</p>
                     : approvedApplications.map(application => (
                         <Flex p={5} m={5} flexDirection="column" justifyContent="space-between" alignItems="center" borderWidth={1} borderRadius={8} boxShadow="lg">
-                            <VStack mb={{base: 5, md: 0}} boxSize="100%"><DragHandleIcon boxSize="20px" /><p>{application.team === "" ? 'Kein Team' : application.team}</p></VStack>
+                            <VStack mb={{base: 5, md: 0}} boxSize="100%"><DragHandleIcon boxSize="25px" /><p style={{fontSize: "17px"}}>{application.team === "" ? 'Kein Team' : application.team}</p></VStack>
+                            <Button mt={3} rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">Erstellen</Button>
                         </Flex>
                     ))
                 }
             </Box>
             <Spacer />
-            <Box p={5} height="80vh" width={{base: "100%", md: "70%"}} style={{scrollbarWidth: "none"}} overflow="scroll" overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
+            <Box p={5} width={{base: "100%", md: "68%"}} overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
                 <Heading size="lg">Ausstehende Anmeldungen</Heading>
                 {
                     pendingApplications.length < 1 ? <p>Loading...</p>
@@ -51,9 +50,7 @@ const AdminDashboard = () => {
                             <VStack mb={{base: 5, md: 0}} boxSize="25%"><AtSignIcon boxSize="20px" /><p>{application.name}</p></VStack>
                             <VStack mb={{base: 5, md: 0}} boxSize="25%"><EmailIcon boxSize="20px" /><p>{application.email}</p></VStack>
                             <VStack mb={{base: 5, md: 0}} boxSize="25%"><DragHandleIcon boxSize="20px" /><p>{application.team === "" ? 'Kein Team' : application.team}</p></VStack>
-                            <Button rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">
-                                Annehmen
-                            </Button>
+                            <Button rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">Annehmen</Button>
                         </Flex>
                     ))
                 }
@@ -69,6 +66,7 @@ const AdminDashboard = () => {
                     ))
                 }
             </Box>
+            <Spacer />
         </Flex>
     )
 }
