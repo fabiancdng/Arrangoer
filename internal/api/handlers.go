@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"strconv"
 
@@ -173,6 +174,8 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+
+	api.channel <- fmt.Sprintf("signup///%s///%s", application.UserID, application.Team)
 
 	return ctx.SendStatus(200)
 }

@@ -9,14 +9,15 @@ import (
 
 type Config struct {
 	Discord struct {
-		Token          string `yaml:"token"`
-		ClientID       string `yaml:"client_id"`
-		ClientSecret   string `yaml:"client_secret"`
-		ServerID       string `yaml:"server_id"`
-		Prefix         string `yaml:"prefix"`
-		LobbyChannelID string `yaml:"lobby_channel_id"`
-		InviteLink     string `yaml:"invite_link"`
-		WelcomeMessage string `yaml:"welcome_message"`
+		Token                string `yaml:"token"`
+		ClientID             string `yaml:"client_id"`
+		ClientSecret         string `yaml:"client_secret"`
+		ServerID             string `yaml:"server_id"`
+		Prefix               string `yaml:"prefix"`
+		LobbyChannelID       string `yaml:"lobby_channel_id"`
+		ApplicationChannelID string `yaml:"application_channel_id"`
+		InviteLink           string `yaml:"invite_link"`
+		WelcomeMessage       string `yaml:"welcome_message"`
 	} `yaml:"discord"`
 
 	API struct {

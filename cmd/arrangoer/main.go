@@ -80,7 +80,7 @@ func main() {
 	go (func() {
 		for {
 			apiCommand := <-apiChannel
-			apicommands.HandleAPICommand(session, apiCommand)
+			go apicommands.HandleAPICommand(session, config, apiCommand)
 		}
 	})()
 
