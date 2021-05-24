@@ -15,7 +15,7 @@ const App = () => {
   const { guild, loggedIn, setLoggedIn, setUser, setGuild } = useContext(UserContext)
     
   useEffect(() => {
-    fetch(ApiAddress + "/api/auth/get/user")
+    fetch(ApiAddress + "/api/auth/get/user", {credentials: "include"})
       .then(async res => {
         if(res.ok) {
           res = await res.json()
@@ -25,7 +25,7 @@ const App = () => {
         }
       })
 
-      fetch(ApiAddress + "/api/auth/get/guild")
+      fetch(ApiAddress + "/api/auth/get/guild", {credentials: "include"})
         .then(async res => {
           if(res.ok) {
             res = await res.json();

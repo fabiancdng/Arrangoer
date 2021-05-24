@@ -38,7 +38,9 @@ func NewAPI(config *config.Config, db database.Middleware, channel chan string) 
 	app := fiber.New()
 	store := session.New()
 
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 
 	api := &API{
 		app:         app,
