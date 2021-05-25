@@ -141,6 +141,6 @@ func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 		currentApplication.Team = teams[currentTeamID]
 		applications = append(applications, *currentApplication)
 	}
-	log.Println(applications)
+
 	return applications, nil
 }
