@@ -193,10 +193,12 @@ func (api *API) applicationList(ctx *fiber.Ctx) error {
 	return ctx.JSON(applications)
 }
 
+// Akzeptiert und editiert ggf. Anmeldungen (oder lehnt sie ab)
 func (api *API) applicationAccept(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(200)
 }
 
+// Akzeptiert und editiert ggf. Teams (oder lehnt sie ab)
 func (api *API) teamAccept(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(200)
 }
