@@ -38,7 +38,7 @@ func NewAPI(config *config.Config, db database.Middleware, channel chan string) 
 	app := fiber.New()
 	store := session.New()
 
-	// Cross-site Anfrangen erlauben
+	// Cross-origin Anfrangen erlauben
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
@@ -67,18 +67,20 @@ func (api *API) registerHandlers() {
 	// Routes für /api/*
 	apiGroup := api.app.Group("/api")
 
-	// Untergruppe für Authentication Endpoints
+	// Untergruppe für Authentication-Endpoints
 	// Routes für /api/auth/*
 	apiAuthGroup := apiGroup.Group("/auth")
 	apiAuthGroup.Get("/", api.auth)
 	apiAuthGroup.Get("/callback", api.authCallback)
 	apiAuthGroup.Get("/get/:endpoint", Protected(), api.authGetFromEndpoint)
 
-	// Untergruppe für Anmeldungs Endpoints
+	// Untergruppe für Anmeldungs-Endpoints
 	// Routes für /api/application/*
 	apiApplicationGroup := apiGroup.Group("/application")
 	apiApplicationGroup.Post("/submit", Protected(), api.applicationSubmit)
 	apiApplicationGroup.Get("/list", Protected(), api.applicationList)
+	apiApplicationGroup.Get("/accept/applicant", Protected(), api.applicationAccept)
+	apiApplicationGroup.Get("/accept/team", Protected(), api.teamAccept)
 }
 
 func (api *API) RunAPI() {

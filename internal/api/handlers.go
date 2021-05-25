@@ -138,6 +138,7 @@ func (api *API) authGetFromEndpoint(ctx *fiber.Ctx) error {
 
 // +++++++ APPLICATION HANDLERS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+// Nimmt Daten des Anmeldeformulars entgegen
 func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 	jwtoken := ctx.Locals("jwtoken").(*jwt.Token)
 	claims := jwtoken.Claims.(jwt.MapClaims)
@@ -182,6 +183,7 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(200)
 }
 
+// Gibt alle Anmeldungen und Teams zurück
 func (api *API) applicationList(ctx *fiber.Ctx) error {
 	applications, err := api.db.GetApplications()
 	if err != nil {
@@ -189,4 +191,12 @@ func (api *API) applicationList(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.JSON(applications)
+}
+
+func (api *API) applicationAccept(ctx *fiber.Ctx) error {
+	return ctx.SendStatus(200)
+}
+
+func (api *API) teamAccept(ctx *fiber.Ctx) error {
+	return ctx.SendStatus(200)
 }
