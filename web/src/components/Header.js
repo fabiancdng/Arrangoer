@@ -11,7 +11,7 @@ const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
 
     const logout = () => {
-        fetch(ApiAddress + "/api/auth/logout", {credentials: "include"})
+        fetch(ApiAddress + "/api/auth/logout")
             .then(res => {
                 if(res.ok) {
                     setUser("pending")

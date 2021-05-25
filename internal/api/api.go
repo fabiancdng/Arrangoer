@@ -28,7 +28,7 @@ func NewAPI(config *config.Config, db database.Middleware, channel chan string) 
 	var state string = "v6uhSq6eWsnyAp"
 
 	discordAuth := &oauth2.Config{
-		RedirectURL:  config.API.APIUrl + "/api/auth/callback",
+		RedirectURL:  config.API.FrontendURL,
 		ClientID:     config.Discord.ClientID,
 		ClientSecret: config.Discord.ClientSecret,
 		Scopes:       []string{discord.ScopeIdentify, discord.ScopeGuilds},
@@ -38,8 +38,13 @@ func NewAPI(config *config.Config, db database.Middleware, channel chan string) 
 	app := fiber.New()
 	store := session.New()
 
+	// Cross-site Anfrangen erlauben
 	app.Use(cors.New(cors.Config{
-		AllowCredentials: true,
+		AllowOrigins:     "*",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
+		AllowHeaders:     "*",
+		AllowCredentials: false,
+		ExposeHeaders:    "",
 	}))
 
 	api := &API{
@@ -67,14 +72,13 @@ func (api *API) registerHandlers() {
 	apiAuthGroup := apiGroup.Group("/auth")
 	apiAuthGroup.Get("/", api.auth)
 	apiAuthGroup.Get("/callback", api.authCallback)
-	apiAuthGroup.Get("/get/:endpoint", api.authGetFromEndpoint)
-	apiAuthGroup.Get("/logout", api.authLogout)
+	apiAuthGroup.Get("/get/:endpoint", Protected(), api.authGetFromEndpoint)
 
 	// Untergruppe für Anmeldungs Endpoints
 	// Routes für /api/application/*
 	apiApplicationGroup := apiGroup.Group("/application")
-	apiApplicationGroup.Post("/submit", api.applicationSubmit)
-	apiApplicationGroup.Get("/list", api.applicationList)
+	apiApplicationGroup.Post("/submit", Protected(), api.applicationSubmit)
+	apiApplicationGroup.Get("/list", Protected(), api.applicationList)
 }
 
 func (api *API) RunAPI() {

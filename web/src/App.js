@@ -15,17 +15,46 @@ const App = () => {
   const { guild, loggedIn, setLoggedIn, setUser, setGuild } = useContext(UserContext)
     
   useEffect(() => {
-    fetch(ApiAddress + "/api/auth/get/user", {credentials: "include"})
+    // Notwendige Nutzerinfos mit JWT Header von der REST API abrufen
+    const getUser = () => {
+      fetch(ApiAddress + "/api/auth/get/user", {
+        mode: 'cors',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("jwt")
+        }
+      })
       .then(async res => {
         if(res.ok) {
           res = await res.json()
           console.log(res);
           setLoggedIn(true);
           setUser(res);
+          getGuild()
         }
       })
+    }
+    
+    // State und Code bei der REST API gegen JWT eintauschen
+    // und diesen im localStorage speichern
+    const getCallback = (state, code) => {
+      fetch(ApiAddress + `/api/auth/callback?state=${state}&code=${code}`)
+        .then(async res => {
+          if(res.ok) {
+            res = await res.json()
+            console.log(res.jwt);
+            localStorage.setItem("jwt", res.jwt)
+            getUser()
+          }
+        })
+    }
 
-      fetch(ApiAddress + "/api/auth/get/guild", {credentials: "include"})
+    const getGuild = () => {
+      fetch(ApiAddress + "/api/auth/get/guild",{
+          mode: 'cors',
+          headers: {
+            "Authorization": "Bearer " + localStorage.getItem("jwt")
+          }
+        })
         .then(async res => {
           if(res.ok) {
             res = await res.json();
@@ -36,6 +65,24 @@ const App = () => {
             setGuild(false);
           }
         });
+    }
+
+      // Prüfen, ob schon ein JWT im localStorage gespeichert ist
+      if(localStorage.getItem("jwt") === null) {
+        // Versuchen, State und Code aus den URL Parametern auszulesen
+        var params = new URLSearchParams(document.location.search);
+        var state = params.get("state");
+        var code = params.get("code");
+        console.log(state, code)
+        if(state !== null || code !== null) {
+          getCallback(state, code)
+        } else {
+          setLoggedIn(false)
+          setGuild(false)
+        }
+      } else {
+        getUser()
+      }
     }, [setLoggedIn, setUser, setGuild])
 
   if(loggedIn === "pending" || guild === "pending") {

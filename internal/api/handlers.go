@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/fabiancdng/Arrangoer/internal/models"
+	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/oauth2"
 )
@@ -19,6 +20,8 @@ func (api *API) auth(ctx *fiber.Ctx) error {
 	return ctx.Redirect(api.discordAuth.AuthCodeURL(api.state), 307)
 }
 
+// Route, die den State und Code aus einem Discord Callback request als GET Parameter akzeptiert
+// und sie gegen einen JWT austauscht.
 func (api *API) authCallback(ctx *fiber.Ctx) error {
 	callbackRequest := new(CallbackRequest)
 
@@ -38,24 +41,32 @@ func (api *API) authCallback(ctx *fiber.Ctx) error {
 		return fiber.NewError(500, "an error occured at code/token exchange")
 	}
 
-	sess, err := api.store.Get(ctx)
+	// Neuer JSON Web Token
+	jwtoken := jwt.New(jwt.SigningMethodHS256)
+
+	// Discord access und refresh token in JWT speichern
+	claims := jwtoken.Claims.(jwt.MapClaims)
+	claims["dc_access_token"] = token.AccessToken
+	claims["dc_refresh_token"] = token.RefreshToken
+
+	signedjwt, err := jwtoken.SignedString([]byte("gbt3FPVq5#MwU8SM^hpvUJwxEw"))
 	if err != nil {
-		return fiber.NewError(500, "error processing session")
+		return fiber.NewError(500)
 	}
 
-	defer sess.Save()
-
-	// Discord Access- & Refresh-Token in serverseitiger Session speichern
-	sess.Set("dc_access_token", token.AccessToken)
-	sess.Set("dc_refresh_token", token.AccessToken)
-
-	return ctx.Redirect(api.config.API.FrontendURL)
+	return ctx.JSON(fiber.Map{
+		"jwt": signedjwt,
+	})
 }
 
 // Daten von der Discord OAuth2 API abrufen (wie Nutzerinfos oder Guildinfos)
 func (api *API) authGetFromEndpoint(ctx *fiber.Ctx) error {
-	accessToken, refreshToken, err := authorize(ctx, api.store)
-	if accessToken == "" || refreshToken == "" || err != nil {
+	jwtoken := ctx.Locals("jwtoken").(*jwt.Token)
+	claims := jwtoken.Claims.(jwt.MapClaims)
+	accessToken := claims["dc_access_token"].(string)
+	refreshToken := claims["dc_refresh_token"].(string)
+
+	if accessToken == "" || refreshToken == "" {
 		return fiber.NewError(401)
 	}
 
@@ -125,30 +136,21 @@ func (api *API) authGetFromEndpoint(ctx *fiber.Ctx) error {
 
 }
 
-func (api *API) authLogout(ctx *fiber.Ctx) error {
-	sess, err := api.store.Get(ctx)
-	if err != nil || sess == nil {
-		return fiber.NewError(500, "error processing session")
-	}
-
-	if err := sess.Destroy(); err != nil {
-		return fiber.NewError(500, "error deleting session")
-	}
-
-	return ctx.SendStatus(200)
-}
-
 // +++++++ APPLICATION HANDLERS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
-	accessToken, refreshToken, err := authorize(ctx, api.store)
-	if accessToken == "" || refreshToken == "" || err != nil {
+	jwtoken := ctx.Locals("jwt").(*jwt.Token)
+	claims := jwtoken.Claims.(jwt.MapClaims)
+	accessToken := claims["dc_access_token"].(string)
+	refreshToken := claims["dc_refresh_token"].(string)
+
+	if accessToken == "" || refreshToken == "" {
 		return fiber.NewError(401)
 	}
 
 	application := new(models.ApplicationRequest)
 
-	err = ctx.BodyParser(application)
+	err := ctx.BodyParser(application)
 	if err != nil {
 		return fiber.NewError(400)
 	}

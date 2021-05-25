@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     var newPenApplication = pendingApplications.slice()
 
     useEffect(() => {
-        fetch(ApiAddress + "/api/application/list", {credentials: "include"})
+        fetch(ApiAddress + "/api/application/list")
             .then(async res => {
                 if(res.ok) {
                     res = await res.json()
