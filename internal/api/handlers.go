@@ -139,7 +139,7 @@ func (api *API) authGetFromEndpoint(ctx *fiber.Ctx) error {
 // +++++++ APPLICATION HANDLERS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
-	jwtoken := ctx.Locals("jwt").(*jwt.Token)
+	jwtoken := ctx.Locals("jwtoken").(*jwt.Token)
 	claims := jwtoken.Claims.(jwt.MapClaims)
 	accessToken := claims["dc_access_token"].(string)
 	refreshToken := claims["dc_refresh_token"].(string)

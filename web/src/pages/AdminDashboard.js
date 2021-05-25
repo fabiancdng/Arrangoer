@@ -11,7 +11,12 @@ const AdminDashboard = () => {
     var newPenApplication = pendingApplications.slice()
 
     useEffect(() => {
-        fetch(ApiAddress + "/api/application/list")
+        fetch(ApiAddress + "/api/application/list", {
+            mode: 'cors',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+            }
+        })
             .then(async res => {
                 if(res.ok) {
                     res = await res.json()
@@ -22,6 +27,9 @@ const AdminDashboard = () => {
                         })
                     setApprovedApplications(newAppApplication)
                     setPendingApplications(newPenApplication)
+                } else if(res.status === 401) {
+                    localStorage.removeItem('jwt')
+                    window.location.reload()
                 } else {
                     alert("Es gab einen Fehler beim Laden der Anmeldungen.")
                 }

@@ -18,9 +18,11 @@ const Signup = () => {
 
         fetch(ApiAddress + "/api/application/submit", {
             method: 'POST',
+            mode: 'cors',
             headers: {
               'Accept': 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('jwt')
             },
             body: JSON.stringify({name: name, email: email, team: team})
         })
