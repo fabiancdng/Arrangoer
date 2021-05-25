@@ -11,15 +11,8 @@ const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
 
     const logout = () => {
-        fetch(ApiAddress + "/api/auth/logout")
-            .then(res => {
-                if(res.ok) {
-                    setUser("pending")
-                    setGuild("pending")
-                    setLoggedIn(false)
-                    window.location.href = '/'
-                }
-            })
+        localStorage.removeItem("jwt")
+        window.location.reload()
     }
 
     return (
