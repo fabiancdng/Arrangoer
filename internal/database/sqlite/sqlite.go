@@ -191,7 +191,7 @@ func (sqlite *SQLite) ApproveTeam(teamID int) error {
 	return nil
 }
 
-// Eine Anmeldung in der Datenbank als 'akzeptiert' markieren
+// Eine Anmeldung aus der Datenbank löschen, da sie abgelehnt wurde
 func (sqlite *SQLite) DeclineApplication(applicationID int) error {
 	// Prüfen, ob die Anmeldung in der Datenbank existiert
 	id := 0
@@ -205,8 +205,8 @@ func (sqlite *SQLite) DeclineApplication(applicationID int) error {
 		return fiber.NewError(404)
 	}
 
-	// Die Anmeldung existiert (in der DB) und der Status wird entsprechend geupdatet
-	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted` = 1 WHERE `id`=?", applicationID)
+	// Die Anmeldung existiert (in der DB) und wird entsprechend gelöscht
+	_, err = sqlite.db.Exec("DELETE FROM `applications` WHERE `id`=?", applicationID)
 	if err != nil {
 		return fiber.NewError(500)
 	}
@@ -228,7 +228,7 @@ func (sqlite *SQLite) DeclineTeam(teamID int) error {
 		return fiber.NewError(404)
 	}
 
-	// Das Team existiert (in der DB) und der Status wird entsprechend geupdatet
+	// Das Team existiert (in der DB) und wird entsprechend gelöscht
 	_, err = sqlite.db.Exec("DELETE FROM `teams` WHERE `id`=?", teamID)
 	if err != nil {
 		return fiber.NewError(500)
