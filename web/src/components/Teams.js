@@ -8,13 +8,13 @@ const Teams = ({ pendingApplications, approvedApplications }) => {
             {
                 pendingApplications.length < 1 ? <p>Keine ausstehenden Teams vorhanden.</p>
                 : pendingApplications.map((application, index) => (
-                    <Team key={index} team={application.team} approved={false} />
+                    <Team key={index} application={application} approved={false} />
                 ))
             }
             {
                 approvedApplications.length < 1 ? <p>Keine angenommenen Teams vorhanden.</p>
                 : approvedApplications.map((application, index) => (
-                    <Team key={index} team={application.team} approved={true} />
+                    <Team key={index} application={application} approved={true} />
                 ))
             }
         </Box>
