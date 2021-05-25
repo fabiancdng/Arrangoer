@@ -149,6 +149,7 @@ func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 func (sqlite *SQLite) AcceptApplication(applicationID int, applicantName string) error {
 	// Prüfen, ob die Anmeldung in der Datenbank existiert
 	id := 0
+	log.Println(applicationID, applicantName)
 	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `id`=?", applicationID).Scan(&id)
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -160,7 +161,7 @@ func (sqlite *SQLite) AcceptApplication(applicationID int, applicantName string)
 	}
 
 	// Die Anmeldung existiert (in der DB) und der Status wird entsprechend geupdatet
-	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted`=1, `name`='?'  WHERE `id`=?", applicantName, applicationID)
+	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted`=1, `name`=?  WHERE `id`=?", applicantName, applicationID)
 	if err != nil {
 		return fiber.NewError(500)
 	}
@@ -183,7 +184,7 @@ func (sqlite *SQLite) ApproveTeam(teamID int, teamName string) error {
 	}
 
 	// Das Team existiert (in der DB) und der Status wird entsprechend geupdatet
-	_, err = sqlite.db.Exec("UPDATE `teams` SET `approved`=1, `name`='?' WHERE `id`=?", teamName, teamID)
+	_, err = sqlite.db.Exec("UPDATE `teams` SET `approved`=1, `name`=? WHERE `id`=?", teamName, teamID)
 	if err != nil {
 		return fiber.NewError(500)
 	}

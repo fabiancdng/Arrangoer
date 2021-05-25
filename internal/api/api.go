@@ -79,10 +79,14 @@ func (api *API) registerHandlers() {
 	apiApplicationGroup := apiGroup.Group("/application")
 	apiApplicationGroup.Post("/submit", Protected(), api.applicationSubmit)
 	apiApplicationGroup.Get("/list", Protected(), api.applicationList)
-	apiApplicationGroup.Put("/accept/applicant", Protected(), api.applicationAccept)
-	apiApplicationGroup.Put("/accept/team", Protected(), api.teamAccept)
-	apiApplicationGroup.Delete("/decline/applicant", Protected(), api.applicationDecline)
-	apiApplicationGroup.Delete("/decline/team", Protected(), api.teamDecline)
+	apiApplicationGroup.Put("/accept", Protected(), api.applicationAccept)
+	apiApplicationGroup.Delete("/decline", Protected(), api.applicationDecline)
+
+	// Untergruppe für Team-Endpoints
+	// Routes für /api/team/*
+	apiTeamGroup := apiGroup.Group("/team")
+	apiTeamGroup.Put("/accept", Protected(), api.teamAccept)
+	apiTeamGroup.Delete("/decline", Protected(), api.teamDecline)
 }
 
 func (api *API) RunAPI() {

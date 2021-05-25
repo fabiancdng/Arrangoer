@@ -7,10 +7,9 @@ const ApproveModal = ({ isApplication, application }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [name, setName] = useState(isApplication ? application.name : application.team.name)
-    const [changeType, setChangeType] = useState('')
   
-    const commitChange = () => {
-      fetch(ApiAddress + `/api/application/${changeType}/${isApplication ? 'applicant' : 'team'}`, {
+    const commitChange = (changeType) => {
+      fetch(ApiAddress + `/api/${isApplication ? 'application' : 'team'}/${changeType}`, {
         mode: 'cors',
         method: changeType === 'accept' ? 'PUT' : 'DELETE',
         headers: {
@@ -56,8 +55,8 @@ const ApproveModal = ({ isApplication, application }) => {
             </ModalBody>
   
             <ModalFooter>
-              <Button onClick={e => { setChangeType('accept'); commitChange(); }} colorScheme="blue" mr={3}>Speichern & Annehmen</Button>
-              <Button onClick={e => { setChangeType('decline'); commitChange(); }}>Ablehnen</Button>
+              <Button onClick={e => { commitChange('accept'); }} colorScheme="blue" mr={3}>Speichern & Annehmen</Button>
+              <Button onClick={e => { commitChange('decline'); }}>Ablehnen</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
