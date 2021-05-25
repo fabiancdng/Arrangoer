@@ -79,10 +79,10 @@ func (api *API) registerHandlers() {
 	apiApplicationGroup := apiGroup.Group("/application")
 	apiApplicationGroup.Post("/submit", Protected(), api.applicationSubmit)
 	apiApplicationGroup.Get("/list", Protected(), api.applicationList)
-	apiApplicationGroup.Get("/accept/applicant", Protected(), api.applicationAccept)
-	apiApplicationGroup.Get("/accept/team", Protected(), api.teamAccept)
-	apiApplicationGroup.Get("/decline/applicant", Protected(), api.applicationDecline)
-	apiApplicationGroup.Get("/decline/team", Protected(), api.teamDecline)
+	apiApplicationGroup.Put("/accept/applicant", Protected(), api.applicationAccept)
+	apiApplicationGroup.Put("/accept/team", Protected(), api.teamAccept)
+	apiApplicationGroup.Delete("/decline/applicant", Protected(), api.applicationDecline)
+	apiApplicationGroup.Delete("/decline/team", Protected(), api.teamDecline)
 }
 
 func (api *API) RunAPI() {

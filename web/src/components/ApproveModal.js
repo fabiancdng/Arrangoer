@@ -7,13 +7,20 @@ const ApproveModal = ({ isApplication, application }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [name, setName] = useState(isApplication ? application.name : application.team.name)
+    const [changeType, setChangeType] = useState('')
   
     const commitChange = () => {
-      fetch(ApiAddress + `/api/application/accept/${isApplication ? 'applicant' : 'team'}`, {
+      fetch(ApiAddress + `/api/application/${changeType}/${isApplication ? 'applicant' : 'team'}`, {
         mode: 'cors',
+        method: changeType === 'accept' ? 'PUT' : 'DELETE',
         headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
           "Authorization": "Bearer " + localStorage.getItem("jwt")
-        }
+        },
+        body: changeType === 'accept'
+                ? isApplication ? JSON.stringify({id: application.id, name: application.name}) : JSON.stringify({id: application.team.id, name: application.team.name}) 
+                : isApplication ? JSON.stringify({id: application.id}) : JSON.stringify({id: application.team.id})
       })
     }
 
@@ -49,8 +56,8 @@ const ApproveModal = ({ isApplication, application }) => {
             </ModalBody>
   
             <ModalFooter>
-              <Button colorScheme="blue" mr={3}>Speichern & Annehmen</Button>
-              <Button>Ablehnen</Button>
+              <Button onClick={e => { setChangeType('accept'); commitChange(); }} colorScheme="blue" mr={3}>Speichern & Annehmen</Button>
+              <Button onClick={e => { setChangeType('decline'); commitChange(); }}>Ablehnen</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
