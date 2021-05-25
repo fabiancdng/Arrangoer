@@ -22,8 +22,10 @@ type CallbackRequest struct {
 	Code string `query:"code"`
 }
 
-// Eine Anfrage, einen Nutzer oder ein Team zu akzeptieren und in den Wettbewerb aufzunehmen
-type ApproveRequest struct {
+// Eine Anfrage, einen Nutzer oder ein Team zu akzeptieren oder abzulehnen
+type SentenceRequest struct {
 	// Entweder die Team-ID oder die Anmeldungs-ID
-	Id string `query:"id"`
+	Id string `json:"id"`
+	// Name, damit dieser ggf. geändert werden kann
+	Name string `json:"name"`
 }

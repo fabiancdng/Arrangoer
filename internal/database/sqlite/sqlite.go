@@ -146,7 +146,7 @@ func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 }
 
 // Eine Anmeldung in der Datenbank als 'akzeptiert' markieren
-func (sqlite *SQLite) AcceptApplication(applicationID int) error {
+func (sqlite *SQLite) AcceptApplication(applicationID int, applicantName string) error {
 	// Prüfen, ob die Anmeldung in der Datenbank existiert
 	id := 0
 	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `id`=?", applicationID).Scan(&id)
@@ -160,7 +160,7 @@ func (sqlite *SQLite) AcceptApplication(applicationID int) error {
 	}
 
 	// Die Anmeldung existiert (in der DB) und der Status wird entsprechend geupdatet
-	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted` = 1 WHERE `id`=?", applicationID)
+	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted`=1, `name`='?'  WHERE `id`=?", applicantName, applicationID)
 	if err != nil {
 		return fiber.NewError(500)
 	}
@@ -169,7 +169,7 @@ func (sqlite *SQLite) AcceptApplication(applicationID int) error {
 }
 
 // Ein Team in der Datenbank als 'bestätigt' markieren
-func (sqlite *SQLite) ApproveTeam(teamID int) error {
+func (sqlite *SQLite) ApproveTeam(teamID int, teamName string) error {
 	// Prüfen, ob das Team in der Datenbank existiert
 	id := 0
 	err := sqlite.db.QueryRow("SELECT `id` FROM `teams` WHERE `id`=?", teamID).Scan(&id)
@@ -183,7 +183,7 @@ func (sqlite *SQLite) ApproveTeam(teamID int) error {
 	}
 
 	// Das Team existiert (in der DB) und der Status wird entsprechend geupdatet
-	_, err = sqlite.db.Exec("UPDATE `teams` SET `approved` = 1 WHERE `id`=?", teamID)
+	_, err = sqlite.db.Exec("UPDATE `teams` SET `approved`=1, `name`='?' WHERE `id`=?", teamName, teamID)
 	if err != nil {
 		return fiber.NewError(500)
 	}

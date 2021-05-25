@@ -81,6 +81,8 @@ func (api *API) registerHandlers() {
 	apiApplicationGroup.Get("/list", Protected(), api.applicationList)
 	apiApplicationGroup.Get("/accept/applicant", Protected(), api.applicationAccept)
 	apiApplicationGroup.Get("/accept/team", Protected(), api.teamAccept)
+	apiApplicationGroup.Get("/decline/applicant", Protected(), api.applicationDecline)
+	apiApplicationGroup.Get("/decline/team", Protected(), api.teamDecline)
 }
 
 func (api *API) RunAPI() {

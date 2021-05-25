@@ -196,15 +196,15 @@ func (api *API) applicationList(ctx *fiber.Ctx) error {
 
 // Akzeptiert und editiert ggf. Anmeldungen (oder lehnt sie ab)
 func (api *API) applicationAccept(ctx *fiber.Ctx) error {
-	approveRequest := new(ApproveRequest)
+	sentenceRequest := new(SentenceRequest)
 
-	err := ctx.BodyParser(approveRequest)
+	err := ctx.BodyParser(sentenceRequest)
 	if err != nil {
 		return fiber.NewError(400)
 	}
 
-	applicationID, _ := strconv.Atoi(approveRequest.Id)
-	if err = api.db.AcceptApplication(applicationID); err != nil {
+	applicationID, _ := strconv.Atoi(sentenceRequest.Id)
+	if err = api.db.AcceptApplication(applicationID, sentenceRequest.Name); err != nil {
 		return err
 	}
 
@@ -213,5 +213,51 @@ func (api *API) applicationAccept(ctx *fiber.Ctx) error {
 
 // Akzeptiert und editiert ggf. Teams (oder lehnt sie ab)
 func (api *API) teamAccept(ctx *fiber.Ctx) error {
+	sentenceRequest := new(SentenceRequest)
+
+	err := ctx.BodyParser(sentenceRequest)
+	if err != nil {
+		return fiber.NewError(400)
+	}
+
+	teamID, _ := strconv.Atoi(sentenceRequest.Id)
+	if err = api.db.ApproveTeam(teamID, sentenceRequest.Name); err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(200)
+}
+
+// Akzeptiert und editiert ggf. Anmeldungen (oder lehnt sie ab)
+func (api *API) applicationDecline(ctx *fiber.Ctx) error {
+	sentenceRequest := new(SentenceRequest)
+
+	err := ctx.BodyParser(sentenceRequest)
+	if err != nil {
+		return fiber.NewError(400)
+	}
+
+	applicationID, _ := strconv.Atoi(sentenceRequest.Id)
+	if err = api.db.DeclineApplication(applicationID); err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(200)
+}
+
+// Akzeptiert und editiert ggf. Teams (oder lehnt sie ab)
+func (api *API) teamDecline(ctx *fiber.Ctx) error {
+	sentenceRequest := new(SentenceRequest)
+
+	err := ctx.BodyParser(sentenceRequest)
+	if err != nil {
+		return fiber.NewError(400)
+	}
+
+	teamID, _ := strconv.Atoi(sentenceRequest.Id)
+	if err = api.db.DeclineTeam(teamID); err != nil {
+		return err
+	}
+
 	return ctx.SendStatus(200)
 }

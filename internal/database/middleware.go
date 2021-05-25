@@ -13,9 +13,9 @@ type Middleware interface {
 	// Alle Anmeldungen einsehen
 	GetApplications() ([]models.Application, error)
 	// Eine Anmeldung in der Datenbank als 'akzeptiert' markieren
-	AcceptApplication(applicationID int) error
+	AcceptApplication(applicationID int, applicantName string) error
 	// Ein Team in der Datenbank als 'akzeptiert' markieren
-	ApproveTeam(teamID int) error
+	ApproveTeam(teamID int, teamName string) error
 	// Eine Anmeldung aus der Datenbank löschen, da sie abgelehnt wurde
 	DeclineApplication(applicationID int) error
 	// Ein Team aus der Datenbank löschen, da es abgelehnt wurde
