@@ -169,7 +169,6 @@ func (sqlite *SQLite) GetTeams() ([]models.Team, error) {
 func (sqlite *SQLite) AcceptApplication(applicationID int, applicantName string) error {
 	// Prüfen, ob die Anmeldung in der Datenbank existiert
 	id := 0
-	log.Println(applicationID, applicantName)
 	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `id`=?", applicationID).Scan(&id)
 	if err != nil {
 		if err != sql.ErrNoRows {

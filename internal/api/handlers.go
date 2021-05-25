@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"strconv"
 
 	"github.com/fabiancdng/Arrangoer/internal/models"
@@ -215,7 +214,6 @@ func (api *API) applicationAccept(ctx *fiber.Ctx) error {
 	}
 
 	applicationID, _ := strconv.Atoi(sentenceRequest.Id)
-	log.Println(applicationID, sentenceRequest.Name)
 	if err = api.db.AcceptApplication(applicationID, sentenceRequest.Name); err != nil {
 		return err
 	}
