@@ -1,12 +1,22 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react'
+import { ApiAddress } from '../config'
 
 const ApproveModal = ({ isApplication, application }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [name, setName] = useState(isApplication ? application.name : application.team.name)
   
+    const commitChange = () => {
+      fetch(ApiAddress + `/api/application/accept/${isApplication ? 'applicant' : 'team'}`, {
+        mode: 'cors',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("jwt")
+        }
+      })
+    }
+
     return (
       <>
         <Button mt={3} onClick={onOpen} rightIcon={<ArrowForwardIcon />} colorScheme="teal" variant="outline">Erstellen</Button>

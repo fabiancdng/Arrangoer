@@ -6,4 +6,4 @@
     des Bots erreichbar ist.
 */
 
-export const ApiAddress = "http://localhost:5000"
+export const ApiAddress = "http://localhost:5000" // ohne das '/api/'

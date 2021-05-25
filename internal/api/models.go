@@ -21,3 +21,9 @@ type CallbackRequest struct {
 	Sate string `query:"state"`
 	Code string `query:"code"`
 }
+
+// Eine Anfrage, einen Nutzer oder ein Team zu akzeptieren und in den Wettbewerb aufzunehmen
+type ApproveRequest struct {
+	// Entweder die Team-ID oder die Anmeldungs-ID
+	Id string `query:"id"`
+}

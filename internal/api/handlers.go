@@ -178,6 +178,7 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 		return err
 	}
 
+	// Event auslösen, das u. A. eine Benachrichtigung vom Bot triggert
 	api.channel <- fmt.Sprintf("signup///%s///%s", application.UserID, application.Team)
 
 	return ctx.SendStatus(200)
