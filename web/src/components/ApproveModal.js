@@ -3,10 +3,10 @@ import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButt
 import { useState } from 'react'
 import { ApiAddress } from '../config'
 
-const ApproveModal = ({ isApplication, application }) => {
+const ApproveModal = ({ isApplication, application, team }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const [name, setName] = useState(isApplication ? application.name : application.team.name)
+    const [name, setName] = useState(isApplication ? application.name : team.name)
   
     const commitChange = (changeType) => {
       fetch(ApiAddress + `/api/${isApplication ? 'application' : 'team'}/${changeType}`, {
@@ -18,8 +18,8 @@ const ApproveModal = ({ isApplication, application }) => {
           "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
         body: changeType === 'accept'
-                ? isApplication ? JSON.stringify({id: application.id, name: application.name}) : JSON.stringify({id: application.team.id, name: application.team.name}) 
-                : isApplication ? JSON.stringify({id: application.id}) : JSON.stringify({id: application.team.id})
+                ? isApplication ? JSON.stringify({id: application.id, name: application.name}) : JSON.stringify({id: team.id, name: team.name}) 
+                : isApplication ? JSON.stringify({id: application.id}) : JSON.stringify({id: team.id})
       })
     }
 

@@ -85,6 +85,7 @@ func (api *API) registerHandlers() {
 	// Untergruppe für Team-Endpoints
 	// Routes für /api/team/*
 	apiTeamGroup := apiGroup.Group("/team")
+	apiTeamGroup.Get("/list", Protected(), api.teamList)
 	apiTeamGroup.Put("/accept", Protected(), api.teamAccept)
 	apiTeamGroup.Delete("/decline", Protected(), api.teamDecline)
 }

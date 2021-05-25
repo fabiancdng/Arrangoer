@@ -145,6 +145,26 @@ func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 	return applications, nil
 }
 
+// Gibt eine Liste mit allen Anmeldungen (aus der Datenbank) zurück
+func (sqlite *SQLite) GetTeams() ([]models.Team, error) {
+	// Alle Teams auslesen
+	rows, err := sqlite.db.Query("SELECT * FROM `teams`")
+	if err != nil {
+		return nil, fiber.NewError(500)
+	}
+
+	// Team-ID auf Team struct mappen
+	teams := []models.Team{}
+
+	currentTeam := new(models.Team)
+	for rows.Next() {
+		rows.Scan(&currentTeam.ID, &currentTeam.Name, &currentTeam.Approved)
+		teams = append(teams, *currentTeam)
+	}
+
+	return teams, nil
+}
+
 // Eine Anmeldung in der Datenbank als 'akzeptiert' markieren
 func (sqlite *SQLite) AcceptApplication(applicationID int, applicantName string) error {
 	// Prüfen, ob die Anmeldung in der Datenbank existiert

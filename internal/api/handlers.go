@@ -185,7 +185,7 @@ func (api *API) applicationSubmit(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(200)
 }
 
-// Gibt alle Anmeldungen und Teams zurück
+// Gibt alle Anmeldungen zurück
 func (api *API) applicationList(ctx *fiber.Ctx) error {
 	applications, err := api.db.GetApplications()
 	if err != nil {
@@ -193,6 +193,16 @@ func (api *API) applicationList(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.JSON(applications)
+}
+
+// Gibt alle Teams zurück
+func (api *API) teamList(ctx *fiber.Ctx) error {
+	teams, err := api.db.GetTeams()
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(teams)
 }
 
 // Akzeptiert und editiert ggf. Anmeldungen (oder lehnt sie ab)
