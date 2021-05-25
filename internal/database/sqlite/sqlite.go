@@ -144,3 +144,95 @@ func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 
 	return applications, nil
 }
+
+// Eine Anmeldung in der Datenbank als 'akzeptiert' markieren
+func (sqlite *SQLite) AcceptApplication(applicationID int) error {
+	// Prüfen, ob die Anmeldung in der Datenbank existiert
+	id := 0
+	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `id`=?", applicationID).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return fiber.NewError(500)
+		}
+
+		// Die Anmeldung existiert (in der DB) nicht
+		return fiber.NewError(404)
+	}
+
+	// Die Anmeldung existiert (in der DB) und der Status wird entsprechend geupdatet
+	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted` = 1 WHERE `id`=?", applicationID)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	return nil
+}
+
+// Ein Team in der Datenbank als 'bestätigt' markieren
+func (sqlite *SQLite) ApproveTeam(teamID int) error {
+	// Prüfen, ob das Team in der Datenbank existiert
+	id := 0
+	err := sqlite.db.QueryRow("SELECT `id` FROM `teams` WHERE `id`=?", teamID).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return fiber.NewError(500)
+		}
+
+		// Das Team existiert (in der DB) nicht
+		return fiber.NewError(404)
+	}
+
+	// Das Team existiert (in der DB) und der Status wird entsprechend geupdatet
+	_, err = sqlite.db.Exec("UPDATE `teams` SET `approved` = 1 WHERE `id`=?", teamID)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	return nil
+}
+
+// Eine Anmeldung in der Datenbank als 'akzeptiert' markieren
+func (sqlite *SQLite) DeclineApplication(applicationID int) error {
+	// Prüfen, ob die Anmeldung in der Datenbank existiert
+	id := 0
+	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `id`=?", applicationID).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return fiber.NewError(500)
+		}
+
+		// Die Anmeldung existiert (in der DB) nicht
+		return fiber.NewError(404)
+	}
+
+	// Die Anmeldung existiert (in der DB) und der Status wird entsprechend geupdatet
+	_, err = sqlite.db.Exec("UPDATE `applications` SET `accepted` = 1 WHERE `id`=?", applicationID)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	return nil
+}
+
+// Ein Team aus der Datenbank löschen, da es abgelehnt wurde
+func (sqlite *SQLite) DeclineTeam(teamID int) error {
+	// Prüfen, ob das Team in der Datenbank existiert
+	id := 0
+	err := sqlite.db.QueryRow("SELECT `id` FROM `teams` WHERE `id`=?", teamID).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return fiber.NewError(500)
+		}
+
+		// Das Team existiert (in der DB) nicht
+		return fiber.NewError(404)
+	}
+
+	// Das Team existiert (in der DB) und der Status wird entsprechend geupdatet
+	_, err = sqlite.db.Exec("DELETE FROM `teams` WHERE `id`=?", teamID)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	return nil
+}

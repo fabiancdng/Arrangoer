@@ -196,6 +196,18 @@ func (api *API) applicationList(ctx *fiber.Ctx) error {
 
 // Akzeptiert und editiert ggf. Anmeldungen (oder lehnt sie ab)
 func (api *API) applicationAccept(ctx *fiber.Ctx) error {
+	approveRequest := new(ApproveRequest)
+
+	err := ctx.BodyParser(approveRequest)
+	if err != nil {
+		return fiber.NewError(400)
+	}
+
+	applicationID, _ := strconv.Atoi(approveRequest.Id)
+	if err = api.db.AcceptApplication(applicationID); err != nil {
+		return err
+	}
+
 	return ctx.SendStatus(200)
 }
 
