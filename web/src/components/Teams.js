@@ -4,13 +4,12 @@ import Team from "./Team"
 import { ApiAddress } from '../config'
 
 const Teams = () => {
-
     const [approvedTeams, setApprovedTeams] = useState([])
     const [pendingTeams, setPendingTeams] = useState([])
     var newAppTeam = approvedTeams.slice()
     var newPenTeam = pendingTeams.slice()
 
-    useEffect(() => {
+    const updateData = () => {
         fetch(ApiAddress + "/api/team/list", {
             mode: 'cors',
             headers: {
@@ -34,7 +33,11 @@ const Teams = () => {
                     alert("Es gab einen Fehler beim Laden der Anmeldungen.")
                 }
             })
-    }, [setApprovedTeams, setPendingTeams]) // eslint-disable-line react-hooks/exhaustive-deps
+    }
+
+    useEffect(() => {
+        updateData()
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <Box p={5} width={{base: "100%", md: "23%"}} mr={5} overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
@@ -42,13 +45,13 @@ const Teams = () => {
             {
                 pendingTeams.length < 1 ? <p>Keine ausstehenden Teams vorhanden.</p>
                 : pendingTeams.map((team, index) => (
-                    <Team key={index} team={team} approved={false} />
+                    <Team udpateData={updateData} key={index} team={team} approved={false} />
                 ))
             }
             {
                 approvedTeams.length < 1 ? <p>Keine angenommenen Teams vorhanden.</p>
                 : approvedTeams.map((team, index) => (
-                    <Team key={index} team={team} approved={true} />
+                    <Team udpateData={updateData} key={index} team={team} approved={true} />
                 ))
             }
         </Box>

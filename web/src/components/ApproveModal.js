@@ -1,5 +1,5 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ApiAddress } from '../config'
 
@@ -7,8 +7,9 @@ const ApproveModal = ({ isApplication, application, team }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [name, setName] = useState(isApplication ? application.name : team.name)
-  
-    const commitChange = (changeType) => {
+    const [status, setStatus] = useState("pending")
+
+    const commitChange = (changeType, updateData) => {
       fetch(ApiAddress + `/api/${isApplication ? 'application' : 'team'}/${changeType}`, {
         mode: 'cors',
         method: changeType === 'accept' ? 'PUT' : 'DELETE',
@@ -20,7 +21,14 @@ const ApproveModal = ({ isApplication, application, team }) => {
         body: changeType === 'accept'
                 ? isApplication ? JSON.stringify({id: application.id, name: application.name}) : JSON.stringify({id: team.id, name: team.name}) 
                 : isApplication ? JSON.stringify({id: application.id}) : JSON.stringify({id: team.id})
-      })
+      
+        })
+          .then(async res => {
+            if(res.ok) setStatus(true)
+            else setStatus(false)
+            onClose()
+            updateData()
+          })
     }
 
     return (
@@ -54,10 +62,15 @@ const ApproveModal = ({ isApplication, application, team }) => {
 
             </ModalBody>
   
-            <ModalFooter>
-              <Button onClick={e => { commitChange('accept'); }} colorScheme="blue" mr={3}>Speichern & Annehmen</Button>
-              <Button onClick={e => { commitChange('decline'); }}>Ablehnen</Button>
-            </ModalFooter>
+              {
+                status == "pending"
+                ? (
+                  <ModalFooter>
+                    <Button onClick={e => { commitChange('accept'); }} colorScheme="blue" mr={3}>Speichern & Annehmen</Button>
+                    <Button onClick={e => { commitChange('decline'); }}>Ablehnen</Button>
+                  </ModalFooter>
+                  ) : status ? <Text textAlign="center" mb={5} color="green">Erfolg!</Text> : <Text textAlign="center" mb={5} color="red">Ein Fehler ist aufgetreten!</Text>
+              }
           </ModalContent>
         </Modal>
       </>
