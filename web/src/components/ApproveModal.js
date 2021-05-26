@@ -1,15 +1,17 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { ApiAddress } from '../config'
+import { ApplicationTeamContext } from '../context/ApplicationTeamContext'
 
 const ApproveModal = ({ isApplication, application, team }) => {
+    const { reload, setReload } = useContext(ApplicationTeamContext)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [name, setName] = useState(isApplication ? application.name : team.name)
     const [status, setStatus] = useState("pending")
 
-    const commitChange = (changeType, updateData) => {
+    const commitChange = (changeType) => {
       fetch(ApiAddress + `/api/${isApplication ? 'application' : 'team'}/${changeType}`, {
         mode: 'cors',
         method: changeType === 'accept' ? 'PUT' : 'DELETE',
@@ -27,7 +29,7 @@ const ApproveModal = ({ isApplication, application, team }) => {
             if(res.ok) setStatus(true)
             else setStatus(false)
             onClose()
-            updateData()
+            setReload(!reload ? true : false)
           })
     }
 
@@ -63,7 +65,7 @@ const ApproveModal = ({ isApplication, application, team }) => {
             </ModalBody>
   
               {
-                status == "pending"
+                status === "pending"
                 ? (
                   <ModalFooter>
                     <Button onClick={e => { commitChange('accept'); }} colorScheme="blue" mr={3}>Speichern & Annehmen</Button>

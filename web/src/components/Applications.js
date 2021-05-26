@@ -1,16 +1,16 @@
 import { Box, Heading } from "@chakra-ui/layout"
 import Application from "./Application"
 import { ApiAddress } from '../config'
-import { useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
+import { ApplicationTeamContext } from "../context/ApplicationTeamContext"
 
 const Applications = () => {
-    const [approvedApplications, setApprovedApplications] = useState([])
-    const [pendingApplications, setPendingApplications] = useState([])
-
-    var newAppApplication = approvedApplications.slice()
-    var newPenApplication = pendingApplications.slice()
+    const { approvedApplications, setApprovedApplications, pendingApplications, setPendingApplications, reload } = useContext(ApplicationTeamContext)
 
     const updateData = () => {
+        setApprovedApplications([])
+        setPendingApplications([])
+
         fetch(ApiAddress + "/api/application/list", {
             mode: 'cors',
             headers: {
@@ -21,12 +21,9 @@ const Applications = () => {
                 if(res.ok) {
                     res = await res.json()
                     await res.forEach(res => {
-                        console.log(res)
-                        if(res.accepted > 0) newAppApplication.push(res)
-                        else newPenApplication.push(res)
+                        if(res.accepted > 0) setApprovedApplications(prev => [...prev, res])
+                        else setPendingApplications(prev => [...prev, res])
                     })
-                setApprovedApplications(newAppApplication)
-                setPendingApplications(newPenApplication)
                 } else if(res.status === 401) {
                     localStorage.removeItem('jwt')
                     window.location.reload()
@@ -37,8 +34,8 @@ const Applications = () => {
         }
     
     useEffect(() => {
-            updateData()
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+        updateData()
+    }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <Box p={5} width={{base: "100%", md: "68%"}} overflowX="hidden" borderWidth={1} borderRadius={8} boxShadow="lg" flexDirection="column" align="center" justifyContent="center">
@@ -46,14 +43,14 @@ const Applications = () => {
                 {
                     pendingApplications.length < 1 ? <p>Keine ausstehenden Anmeldungen vorhanden.</p>
                     : pendingApplications.map((application, index) => (
-                        <Application udpateData={updateData} key={index} application={application} accepted={false} />
+                        <Application key={index} application={application} accepted={false} />
                     ))
                 }
                 <Heading mt={50} size="lg">Angenommene Anmeldungen</Heading>
                 {
                     approvedApplications.length < 1 ? <p>Keine angenommenen Anmeldungen vorhanden.</p>
                     : approvedApplications.map((application, index) => (
-                        <Application udpateData={updateData} key={index} application={application} accepted={true} />
+                        <Application key={index} application={application} accepted={true} />
                     ))
                 }
         </Box>
