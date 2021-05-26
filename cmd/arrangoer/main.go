@@ -36,9 +36,9 @@ func main() {
 		panic(err)
 	}
 
-	////////////////////////
-	//  	DATABASE	  //
-	////////////////////////
+	//////////////////////////
+	//		DATABASE		//
+	//////////////////////////
 
 	db := new(sqlite.SQLite)
 	if err = db.Open(); err != nil {
@@ -64,9 +64,9 @@ func main() {
 		log.Panic(err)
 	}
 
-	////////////////////////////////
-	//  	API / WEB SERVER	  //
-	////////////////////////////////
+	//////////////////////////////
+	//		API / WEB SERVER	//
+	//////////////////////////////
 
 	// API (& ihren Webserver) in Goroutine starten
 	// und einen Channel zur Kommunikation zwischen Bot und API (/Website) aufbauen
