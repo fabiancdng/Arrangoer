@@ -213,8 +213,7 @@ func (api *API) applicationAccept(ctx *fiber.Ctx) error {
 		return fiber.NewError(400)
 	}
 
-	applicationID, _ := strconv.Atoi(sentenceRequest.Id)
-	if err = api.db.AcceptApplication(applicationID, sentenceRequest.Name); err != nil {
+	if err = api.db.AcceptApplication(sentenceRequest.Id, sentenceRequest.Name); err != nil {
 		return err
 	}
 
@@ -230,8 +229,7 @@ func (api *API) teamAccept(ctx *fiber.Ctx) error {
 		return fiber.NewError(400)
 	}
 
-	teamID, _ := strconv.Atoi(sentenceRequest.Id)
-	if err = api.db.ApproveTeam(teamID, sentenceRequest.Name); err != nil {
+	if err = api.db.ApproveTeam(sentenceRequest.Id, sentenceRequest.Name); err != nil {
 		return err
 	}
 
@@ -247,8 +245,7 @@ func (api *API) applicationDecline(ctx *fiber.Ctx) error {
 		return fiber.NewError(400)
 	}
 
-	applicationID, _ := strconv.Atoi(sentenceRequest.Id)
-	if err = api.db.DeclineApplication(applicationID); err != nil {
+	if err = api.db.DeclineApplication(sentenceRequest.Id); err != nil {
 		return err
 	}
 
@@ -264,8 +261,7 @@ func (api *API) teamDecline(ctx *fiber.Ctx) error {
 		return fiber.NewError(400)
 	}
 
-	teamID, _ := strconv.Atoi(sentenceRequest.Id)
-	if err = api.db.DeclineTeam(teamID); err != nil {
+	if err = api.db.DeclineTeam(sentenceRequest.Id); err != nil {
 		return err
 	}
 

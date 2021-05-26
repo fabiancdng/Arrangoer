@@ -25,7 +25,7 @@ type CallbackRequest struct {
 // Eine Anfrage, einen Nutzer oder ein Team zu akzeptieren oder abzulehnen
 type SentenceRequest struct {
 	// Entweder die Team-ID oder die Anmeldungs-ID
-	Id string `json:"id"`
+	Id int `json:"id"`
 	// Name, damit dieser ggf. geändert werden kann
 	Name string `json:"name"`
 }
