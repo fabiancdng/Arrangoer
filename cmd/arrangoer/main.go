@@ -1,11 +1,11 @@
 /*
-                                 Arrangør
+                                Arrangør
 
-    Discord Bot, der bei der Organisation des Programmier-Wettbewerbs hilft.
+   Discord Bot, der bei der Organisation des Programmier-Wettbewerbs hilft.
 
-    Einsendung für den 'Programmier-Wettbewerb' der 'Digitalen Woche 2021 Leer'
+   Einsendung für den 'Programmier-Wettbewerb' der 'Digitalen Woche 2021 Leer'
 
-                    Copyright (c) 2021 Fabian Reinders
+                   Copyright (c) 2021 Fabian Reinders
 
 */
 
@@ -64,9 +64,9 @@ func main() {
 		log.Panic(err)
 	}
 
-	//////////////////////////////
-	//		API / WEB SERVER	//
-	//////////////////////////////
+	////////////////////////////
+	//    API / WEB SERVER    //
+	////////////////////////////
 
 	// API (& ihren Webserver) in Goroutine starten
 	// und einen Channel zur Kommunikation zwischen Bot und API (/Website) aufbauen
