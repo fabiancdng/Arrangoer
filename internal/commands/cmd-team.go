@@ -1,6 +1,10 @@
 package commands
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"fmt"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 type CommandTeam struct{}
 
@@ -15,7 +19,7 @@ func (commandTeam *CommandTeam) AdminPermissionsNeeded() bool {
 func (commandTeam *CommandTeam) Execute(ctx *Context) (err error) {
 	embed := discordgo.MessageEmbed{
 		Title:       "Zuweisung deines Teams",
-		Description: "Bist du schon angemeldet und hast ein Team gefunden? Dann klicke einmal hier, damit du die entsprechende Rolle auf dem Discord bekommst.\n\n[***➤ HIER DEIN TEAM ZUWEISEN***](https://google.de)",
+		Description: fmt.Sprintf("Bist du schon angemeldet und hast ein Team gefunden? Oder möchtest du dein Team ändern? Dann klicke hier!\n\n[***➤ HIER DEIN TEAM ZUWEISEN***](%s)", ctx.Config.API.FrontendURL),
 		Color:       14680128,
 	}
 	_, err = ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, &embed)

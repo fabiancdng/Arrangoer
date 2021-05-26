@@ -112,7 +112,7 @@ func registerEvents(session *discordgo.Session) {
 
 // Registrierung aller Commands, auf die der Bot hören soll und deren Handler
 func registerCommands(session *discordgo.Session, config *config.Config) {
-	commandHandler := commands.NewCommandHandler(config.Discord.Prefix)
+	commandHandler := commands.NewCommandHandler(config)
 
 	commandHandler.RegisterCommand(&commands.CommandTest{})
 	commandHandler.RegisterCommand(&commands.CommandSignup{})
