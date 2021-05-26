@@ -21,7 +21,7 @@ const ApproveModal = ({ isApplication, application, team }) => {
           "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
         body: changeType === 'accept'
-                ? isApplication ? JSON.stringify({id: application.id, name: name}) : JSON.stringify({id: team.id, name: team.name}) 
+                ? isApplication ? JSON.stringify({id: application.id, name: name}) : JSON.stringify({id: team.id, name: name}) 
                 : isApplication ? JSON.stringify({id: application.id}) : JSON.stringify({id: team.id})
       
         })

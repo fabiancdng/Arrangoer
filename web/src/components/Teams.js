@@ -21,7 +21,7 @@ const Teams = () => {
                 if(res.ok) {
                     res = await res.json()
                     await res.forEach(res => {
-                        if(res.accepted > 0) setApprovedTeams(prev => [...prev, res])
+                        if(res.approved > 0) setApprovedTeams(prev => [...prev, res])
                         else setPendingTeams(prev => [...prev, res])
                     })
                 } else if(res.status === 401) {
