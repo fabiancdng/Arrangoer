@@ -1,11 +1,11 @@
 /*
-								Arrangør
+                                 Arrangør
 
-	Discord Bot, der bei der Organisation des Programmier-Wettbewerbs hilft.
+    Discord Bot, der bei der Organisation des Programmier-Wettbewerbs hilft.
 
-	Einsendung für den 'Programmier-Wettbewerb' der 'Digitalen Woche 2021 Leer'
+    Einsendung für den 'Programmier-Wettbewerb' der 'Digitalen Woche 2021 Leer'
 
-					Copyright (c) 2021 Fabian Reinders
+                    Copyright (c) 2021 Fabian Reinders
 
 */
 
@@ -27,18 +27,18 @@ import (
 )
 
 func main() {
-	/////////////////////
-	//  	CONFIG	   //
-	/////////////////////
+	//////////////////////
+	//      CONFIG      //
+	//////////////////////
 
 	config, err := config.ParseConfig("./config/config.yml")
 	if err != nil {
 		panic(err)
 	}
 
-	//////////////////////////
-	//		DATABASE		//
-	//////////////////////////
+	///////////////////////////
+	//       DATABASE        //
+	///////////////////////////
 
 	db := new(sqlite.SQLite)
 	if err = db.Open(); err != nil {
