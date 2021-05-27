@@ -306,3 +306,37 @@ func (sqlite *SQLite) GetTeamMembers(teamID int) ([]*models.Application, error) 
 
 	return teamMembers, err
 }
+
+// Das Team einer Anmeldung ändern
+func (sqlite *SQLite) UpdateTeam(userID string, teamID string) error {
+	// Prüfen, ob die Anmeldung in der Datenbank existiert
+	id := 0
+	err := sqlite.db.QueryRow("SELECT `id` FROM `applications` WHERE `user_id`=?", userID).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return fiber.NewError(500)
+		}
+
+		// Die Anmeldung existiert (in der DB) nicht
+		return fiber.NewError(404)
+	}
+
+	// Prüfen, ob das Team in der Datenbank existiert
+	err = sqlite.db.QueryRow("SELECT `id` FROM `teams` WHERE `id`=?", teamID).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return fiber.NewError(500)
+		}
+
+		// Das Team existiert (in der DB) nicht
+		return fiber.NewError(404)
+	}
+
+	// Das Team existiert (in der DB) und die Anmeldung wird entsprechend aktualisiert
+	_, err = sqlite.db.Exec("UPDATE `applications` SET `team`=? WHERE `user_id`=?", teamID, userID)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	return nil
+}

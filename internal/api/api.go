@@ -86,6 +86,7 @@ func (api *API) registerHandlers() {
 	// Routes für /api/team/*
 	apiTeamGroup := apiGroup.Group("/team")
 	apiTeamGroup.Get("/list", Protected(), api.teamList)
+	apiTeamGroup.Put("/select", Protected(), api.teamSelect)
 	apiTeamGroup.Put("/accept", Protected(), api.teamAccept)
 	apiTeamGroup.Delete("/decline", Protected(), api.teamDecline)
 }

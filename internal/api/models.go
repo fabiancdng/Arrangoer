@@ -29,3 +29,11 @@ type SentenceRequest struct {
 	// Name, damit dieser ggf. geändert werden kann
 	Name string `json:"name"`
 }
+
+// Ein Request, um sein Team auszuwählen oder zu wechseln
+type TeamSelectRequest struct {
+	// Discord UserID
+	UserID string `json:"user_id"`
+	// ID von dem Team, in das der Nutzer möchte
+	TeamID string `json:"team_id"`
+}

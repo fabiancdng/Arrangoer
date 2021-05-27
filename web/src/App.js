@@ -147,7 +147,7 @@ const App = () => {
           }
         </Route>
 
-        <Route path="/signup">
+        <Route path="/select">
         {
             loggedIn
               ? <SelectTeam />

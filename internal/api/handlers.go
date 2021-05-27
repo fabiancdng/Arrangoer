@@ -273,3 +273,14 @@ func (api *API) teamDecline(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(200)
 }
+
+// Akzeptiert und editiert ggf. Teams (oder lehnt sie ab)
+func (api *API) teamSelect(ctx *fiber.Ctx) error {
+	teamSelectRequest := new(TeamSelectRequest)
+
+	if err := api.db.UpdateTeam(teamSelectRequest.UserID, teamSelectRequest.TeamID); err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(200)
+}
