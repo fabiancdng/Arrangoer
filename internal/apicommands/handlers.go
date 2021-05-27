@@ -21,7 +21,7 @@ func HandleAPICommand(ctx *Context) {
 	switch invoke {
 	// Eine Anmeldung ist eingegangen
 	case "signup":
-		message := fmt.Sprintf("**Eine Anmeldung von <@%s> ist soeben eingegangen!** 🥳\n\nDu wirst benachrichtigt, sobald deine Anmeldung angenommen oder abgelehnt wurde.", args[0])
+		message := fmt.Sprintf("**Eine Anmeldung von <@!%s> ist soeben eingegangen!** 🥳\n\nDu wirst benachrichtigt, sobald deine Anmeldung angenommen oder abgelehnt wurde.", args[0])
 
 		if args[1] != "" {
 			message += fmt.Sprintf("\n\nSobald dein Team **%s** vom Spielleiter bestätigt wurde, wirst du benachrichtigt und bekommst die Discord-Rolle automatisch zugewiesen.", args[1])
@@ -47,7 +47,7 @@ func HandleAPICommand(ctx *Context) {
 			return
 		}
 
-		message := fmt.Sprintf("**Die Anmeldung von <@%s> wurde soeben akzeptiert!** 🥳\n\nFalls dein Team noch nicht bestätigt wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊", application.UserID)
+		message := fmt.Sprintf("**Die Anmeldung von <@!%s> wurde soeben akzeptiert!** 🥳\n\nFalls dein Team noch nicht bestätigt wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊", application.UserID)
 
 		embed := &discordgo.MessageEmbed{
 			Title:       "Anmeldung akzeptiert",
