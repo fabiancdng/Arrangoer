@@ -12,8 +12,10 @@ type Middleware interface {
 	SaveApplication(application *models.ApplicationRequest) error
 	// Gibt eine bestimmte Anmeldung zurück
 	GetApplication(applicationID int) (*models.Application, error)
-	// Gibt alle Member sowie den Namen eines Teams zurück
+	// Gibt ID, Namen und Status des Teams zurück
 	GetTeam(teamID int) (*models.Team, error)
+	// Gibt alle Member eines Teams zurück
+	GetTeamMembers(teamID int) ([]*models.Application, error)
 	// Alle Anmeldungen zurückgeben
 	GetApplications() ([]models.Application, error)
 	// Alle Teams zurückgeben

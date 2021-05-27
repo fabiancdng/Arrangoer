@@ -288,3 +288,23 @@ func (sqlite *SQLite) DeclineTeam(teamID int) error {
 
 	return nil
 }
+
+// Gibt alle Member eines Teams zurück
+func (sqlite *SQLite) GetTeamMembers(teamID int) ([]*models.Application, error) {
+	var teamMembers []*models.Application
+	rows, err := sqlite.db.Query("SELECT * FROM `applications` WHERE `team`=?", teamID)
+	if err != nil {
+		return teamMembers, err
+	}
+
+	currentApplication := new(models.Application)
+	for rows.Next() {
+		rows.Scan(&currentApplication.ID, &currentApplication.Name, &currentApplication.Email, &currentApplication.Team.ID, &currentApplication.UserID, &currentApplication.Accepted)
+		log.Println(currentApplication)
+		teamMembers = append(teamMembers, currentApplication)
+	}
+
+	log.Println(teamMembers)
+
+	return teamMembers, err
+}

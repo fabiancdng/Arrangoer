@@ -2,6 +2,8 @@ package apicommands
 
 import (
 	"fmt"
+	"log"
+	"math/rand"
 	"strconv"
 	"strings"
 
@@ -28,7 +30,7 @@ func HandleAPICommand(ctx *Context) {
 		}
 
 		embed := &discordgo.MessageEmbed{
-			Title:       "Anmeldung eingegangen",
+			Title:       "📨 Anmeldung eingegangen",
 			Description: message,
 			Color:       15204542,
 		}
@@ -47,12 +49,69 @@ func HandleAPICommand(ctx *Context) {
 			return
 		}
 
-		message := fmt.Sprintf("**Die Anmeldung von <@!%s> wurde soeben akzeptiert!** 🥳\n\nFalls dein Team noch nicht bestätigt wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊", application.UserID)
+		message := fmt.Sprintf("**Die Anmeldung von <@!%s> wurde soeben akzeptiert!** 🥳\n\nFalls dein Team noch nicht akzeptiert wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊", application.UserID)
 
 		embed := &discordgo.MessageEmbed{
-			Title:       "Anmeldung akzeptiert",
+			Title:       "✅ Anmeldung akzeptiert",
 			Description: message,
 			Color:       62781,
+		}
+
+		ctx.Session.ChannelMessageSendEmbed(ctx.Config.Discord.NotificationsChannelID, embed)
+
+	// Ein Team wurde akzeptiert
+	case "team-approved":
+		teamID, err := strconv.Atoi(args[0])
+		if err != nil {
+			return
+		}
+
+		team := new(models.Team)
+		team, err = ctx.Db.GetTeam(teamID)
+		if err != nil {
+			return
+		}
+
+		// Ein paar Farben für die Rollen
+		colors := [7]int{16711684, 13107414, 35798, 16754176, 65429, 33023, 16711820}
+
+		// Neue Rolle erstellen
+		var role *discordgo.Role
+		role, err = ctx.Session.GuildRoleCreate(ctx.Config.Discord.ServerID)
+
+		// Zufällige Farbe für die Rolle auswählen
+		color := colors[rand.Intn(len(colors))]
+
+		// Rolle einen Namen und eine Farbe geben
+		_, err = ctx.Session.GuildRoleEdit(ctx.Config.Discord.ServerID, role.ID, team.Name, color, true, 0, true)
+		if err != nil {
+			return
+		}
+
+		// Alle Team-Member aus der Datenbank auslesen
+		var teamMebers []*models.Application
+		teamMebers, err = ctx.Db.GetTeamMembers(teamID)
+		if err != nil {
+			return
+		}
+
+		// Allen Team-Membern die Rolle geben
+		members := "**Mitglieder**\n"
+		for _, teamMember := range teamMebers {
+			members += fmt.Sprintf("\n*%s* - <@!%s>", teamMember.Name, teamMember.UserID)
+			err = ctx.Session.GuildMemberRoleAdd(ctx.Config.Discord.ServerID, teamMember.UserID, role.ID)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}
+
+		message := fmt.Sprintf("**Das Team <@&%s> wurde soeben akzeptiert!** 🥳\n\n%s\n\nEuch wurde eine entsprechende Rolle im Discord zugewiesen und ein Sprach- sowie Textchannel für euer Team wurde eingerichtet.\nViel Spaß beim Wettbewerb! 😊", role.ID, members)
+
+		embed := &discordgo.MessageEmbed{
+			Title:       "✅ Team akzeptiert",
+			Description: message,
+			Color:       16761600,
 		}
 
 		ctx.Session.ChannelMessageSendEmbed(ctx.Config.Discord.NotificationsChannelID, embed)
