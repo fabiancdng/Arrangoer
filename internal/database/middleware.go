@@ -10,6 +10,10 @@ type Middleware interface {
 	Close() error
 	// Anmeldung für den Wettbewerb in der Datenbank speichern
 	SaveApplication(application *models.ApplicationRequest) error
+	// Gibt eine bestimmte Anmeldung zurück
+	GetApplication(applicationID int) (*models.Application, error)
+	// Gibt alle Member sowie den Namen eines Teams zurück
+	GetTeam(teamID int) (*models.Team, error)
 	// Alle Anmeldungen zurückgeben
 	GetApplications() ([]models.Application, error)
 	// Alle Teams zurückgeben

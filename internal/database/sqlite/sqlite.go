@@ -110,6 +110,38 @@ func (sqlite *SQLite) SaveApplication(application *models.ApplicationRequest) er
 	return nil
 }
 
+// Gibt eine bestimmte Anmeldung zurück
+func (sqlite *SQLite) GetApplication(applicationID int) (*models.Application, error) {
+	application := new(models.Application)
+
+	rows, err := sqlite.db.Query("SELECT * FROM `applications` WHERE `id`=?", applicationID)
+	if err != nil {
+		return application, fiber.NewError(500)
+	}
+
+	for rows.Next() {
+		rows.Scan(&application.ID, &application.Name, &application.Email, &application.Team.ID, &application.UserID, &application.Accepted)
+	}
+
+	return application, nil
+}
+
+// Gibt alle Member sowie den Namen eines Teams zurück
+func (sqlite *SQLite) GetTeam(teamID int) (*models.Team, error) {
+	team := new(models.Team)
+
+	rows, err := sqlite.db.Query("SELECT * FROM `teams` WHERE `id`=?", teamID)
+	if err != nil {
+		return team, fiber.NewError(500)
+	}
+
+	for rows.Next() {
+		rows.Scan(&team.ID, &team.Name, &team.Approved)
+	}
+
+	return team, nil
+}
+
 // Gibt eine Liste mit allen Anmeldungen (aus der Datenbank) zurück
 func (sqlite *SQLite) GetApplications() ([]models.Application, error) {
 	// Alle Teams auslesen

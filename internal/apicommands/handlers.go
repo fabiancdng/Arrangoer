@@ -5,14 +5,13 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/fabiancdng/Arrangoer/internal/config"
 )
 
-// Eine Funktion, die Befehle von der API entgegennimmt und diese ausführt
-// Diese Funktion hat Zugriff auf den Botnutzer und kann diesen nutzen
-// Dies sind z. B. Befehle wie eine Nachricht senden, etc.
-func HandleAPICommand(session *discordgo.Session, config *config.Config, rawAPICommand string) {
-	commandSlice := strings.Split(rawAPICommand, "///")
+// Simpler switch-basierter Command-Handler, der Invokes von der API-
+// Goroutine entgegennimmt und durch Zugriff auf den Bot-Nutzer
+// z. B. Dinge machen kann wie Nachrichten senden oder Rollen erstellen
+func HandleAPICommand(ctx *Context) {
+	commandSlice := strings.Split(ctx.Command, "///")
 
 	invoke := strings.ToLower(commandSlice[0])
 	args := commandSlice[1:]
@@ -30,6 +29,6 @@ func HandleAPICommand(session *discordgo.Session, config *config.Config, rawAPIC
 			Description: message,
 			Color:       58176,
 		}
-		session.ChannelMessageSendEmbed(config.Discord.NotificationsChannelID, embed)
+		ctx.Session.ChannelMessageSendEmbed(ctx.Config.Discord.NotificationsChannelID, embed)
 	}
 }

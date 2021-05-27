@@ -1,11 +1,11 @@
 /*
-                    Web Frontend für den 'Arrangør' Bot
+                     Web Frontend für den 'Arrangør' Bot
   	
     Discord Bot, der bei der Organisation des Programmier-Wettbewerbs hilft.
 
-	  Einsendung für den 'Programmier-Wettbewerb' der 'Digitalen Woche 2021 Leer'
+    Einsendung für den 'Programmier-Wettbewerb' der 'Digitalen Woche 2021 Leer'
 
-					            Copyright (c) 2021 Fabian Reinders
+                     Copyright (c) 2021 Fabian Reinders
 */
 
 import React from 'react'

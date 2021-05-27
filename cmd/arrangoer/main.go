@@ -80,7 +80,13 @@ func main() {
 	go (func() {
 		for {
 			apiCommand := <-apiChannel
-			go apicommands.HandleAPICommand(session, config, apiCommand)
+			ctx := &apicommands.Context{
+				Session: session,
+				Config:  config,
+				Db:      db,
+				Command: apiCommand,
+			}
+			go apicommands.HandleAPICommand(ctx)
 		}
 	})()
 
