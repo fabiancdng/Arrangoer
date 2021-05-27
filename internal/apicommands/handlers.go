@@ -49,7 +49,28 @@ func HandleAPICommand(ctx *Context) {
 			return
 		}
 
-		message := fmt.Sprintf("**Die Anmeldung von <@!%s> wurde soeben akzeptiert!** 🥳\n\nFalls dein Team noch nicht akzeptiert wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊", application.UserID)
+		// Team des Anmeldenden bekommen
+		team := new(models.Team)
+		team, err = ctx.Db.GetTeam(application.Team.ID)
+
+		// Prüfen, ob das Team bereits eine Rolle auf dem Server hat
+		memberGotRole := false
+		roles, _ := ctx.Session.GuildRoles(ctx.Config.Discord.ServerID)
+		for _, role := range roles {
+			if role.Name == team.Name {
+				// Dem neu angenommenen Nutzer die Rolle des Teams geben
+				ctx.Session.GuildMemberRoleAdd(ctx.Config.Discord.ServerID, application.UserID, role.ID)
+				memberGotRole = true
+				break
+			}
+		}
+
+		teamStatus := "Da dein Team noch nicht akzeptiert wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊"
+		if memberGotRole {
+			teamStatus = fmt.Sprintf("Dein Team wurde bereits akzeptiert. Du hast daher die Rolle %s bekommen und kannst die Team-Channel verwenden 🙃", team.Name)
+		}
+
+		message := fmt.Sprintf("**Die Anmeldung von <@!%s> wurde soeben akzeptiert!** 🥳\n\n%s", application.UserID, teamStatus)
 
 		embed := &discordgo.MessageEmbed{
 			Title:       "✅ Anmeldung akzeptiert",

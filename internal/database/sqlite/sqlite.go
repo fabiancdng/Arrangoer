@@ -304,7 +304,5 @@ func (sqlite *SQLite) GetTeamMembers(teamID int) ([]*models.Application, error) 
 		teamMembers = append(teamMembers, currentApplication)
 	}
 
-	log.Println(teamMembers)
-
 	return teamMembers, err
 }
