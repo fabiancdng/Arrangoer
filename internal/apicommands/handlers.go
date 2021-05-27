@@ -2,9 +2,11 @@ package apicommands
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/fabiancdng/Arrangoer/internal/models"
 )
 
 // Simpler switch-basierter Command-Handler, der Invokes von der API-
@@ -28,19 +30,31 @@ func HandleAPICommand(ctx *Context) {
 		embed := &discordgo.MessageEmbed{
 			Title:       "Anmeldung eingegangen",
 			Description: message,
-			Color:       58176,
+			Color:       15204542,
 		}
 		ctx.Session.ChannelMessageSendEmbed(ctx.Config.Discord.NotificationsChannelID, embed)
 
 	// Eine Anmeldung wurde akzeptiert
 	case "signup-accepted":
-		message := fmt.Sprintf("**Die Anmeldung von <@%s> wurde soeben akzeptiert!** 🥳", args[0])
+		applicationID, err := strconv.Atoi(args[0])
+		if err != nil {
+			return
+		}
+
+		application := new(models.Application)
+		application, err = ctx.Db.GetApplication(applicationID)
+		if err != nil {
+			return
+		}
+
+		message := fmt.Sprintf("**Die Anmeldung von <@%s> wurde soeben akzeptiert!** 🥳\n\nFalls dein Team noch nicht bestätigt wurde, folgt eine Benachrichtigung sowie eine automatische Zuweisung der Rolle noch 😊", application.UserID)
 
 		embed := &discordgo.MessageEmbed{
 			Title:       "Anmeldung akzeptiert",
 			Description: message,
-			Color:       58176,
+			Color:       62781,
 		}
+
 		ctx.Session.ChannelMessageSendEmbed(ctx.Config.Discord.NotificationsChannelID, embed)
 	}
 }
