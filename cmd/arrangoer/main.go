@@ -79,13 +79,18 @@ func main() {
 	// Auf Befehle aus dem apiChannel warten und diese ggf. ausführen
 	go (func() {
 		for {
+			// Invoke aus dem Channel lesen
 			apiCommand := <-apiChannel
+
+			// Command-Context erstellen
 			ctx := &apicommands.Context{
 				Session: session,
 				Config:  config,
 				Db:      db,
 				Command: apiCommand,
 			}
+
+			// An API-Command-Handler weitergeben
 			go apicommands.HandleAPICommand(ctx)
 		}
 	})()

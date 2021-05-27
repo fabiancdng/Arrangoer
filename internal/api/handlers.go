@@ -217,6 +217,9 @@ func (api *API) applicationAccept(ctx *fiber.Ctx) error {
 		return err
 	}
 
+	// Event auslösen, das u. A. eine Benachrichtigung vom Bot triggert
+	api.channel <- fmt.Sprintf("signup-accepted///%s", strconv.Itoa(sentenceRequest.Id))
+
 	return ctx.SendStatus(200)
 }
 
