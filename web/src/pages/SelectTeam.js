@@ -1,18 +1,30 @@
 import { Button } from '@chakra-ui/button'
 import { Box, Flex, Heading, Text } from '@chakra-ui/layout'
 import { Select } from '@chakra-ui/select'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ApiAddress } from '../config'
+import { UserContext } from '../context/UserContext'
 const SelectTeam = () => {
 
+    const { user } = useContext(UserContext)
+
     const [approvedTeams, setApprovedTeams] = useState([])
-    const [selectedTeam, setSelectedTeam] = useState('')
+    const [selectedTeam, setSelectedTeam] = useState(0)
 
     const submitChoice = () => {
         if(selectedTeam === '') {
             alert("Bitte wähle ein Team aus")
             return
         }
+
+        fetch(ApiAddress + "/api/team/select", {
+            mode: 'cors',
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+            },
+            body: JSON.stringify({user_id: Number(user.id), team_id: Number(selectedTeam)})
+        })
         console.log(selectedTeam)
     }
 

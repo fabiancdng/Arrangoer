@@ -33,7 +33,7 @@ type SentenceRequest struct {
 // Ein Request, um sein Team auszuwählen oder zu wechseln
 type TeamSelectRequest struct {
 	// Discord UserID
-	UserID string `json:"user_id"`
+	UserID int `json:"user_id"`
 	// ID von dem Team, in das der Nutzer möchte
-	TeamID string `json:"team_id"`
+	TeamID int `json:"team_id"`
 }
