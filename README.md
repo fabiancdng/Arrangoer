@@ -1,13 +1,14 @@
 <div align="center">
     <img src="assets/Arrangør-transparent.png" width="230px" />
-    <hr>
     <h1>Arrangør</h1>
+    <h2>⚠️ This repository is just an archive! ⚠️</h2>
+    <p>This project was a submission for a (German) Hackathon I participated in. It's a Discord bot written in Go that helps you organize your Hackathon. Please visit the link below for the current version of the code (⚠️ the code in this repo is outdated ⚠️).</p>
+    <h3>Find the up-to-date repository <a href="https://github.com/Pudl0/Programmierwettbewerb_2021/tree/main/Fabian%20Reinders">&rarr; here</a>.</h3>
+    <hr>
     <strong>
         Ein Discord Bot, der bei der Organisation des Programmier-Wettbewerbs hilft und zahlreiche Automatisierungen sowie ein (Web-) Dashboard bietet. 
     </strong><br><br>
 </div>
-
----
 
 ## Funktionen des Bots
 ### Web-Oberfläche
